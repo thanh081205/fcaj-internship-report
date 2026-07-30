@@ -5,55 +5,26 @@ weight: 1
 chapter: false
 pre: " <b> 1.8. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-
 ### Mục tiêu tuần 8:
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+* Deploy embedding model lên AWS SageMaker Serverless Inference.
+* Xử lý merge conflict với nhóm và thiết lập kiểm soát chi phí.
+* Hoàn thành test, blog, và các phần còn lại của báo cáo thực tập.
 
-### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-
+### Công việc thực hiện trong tuần:
+| Thứ | Công việc | Ngày | Nguồn tài liệu |
+| --- | --- | --- | --- |
+| 2 | Đóng gói `multilingual-e5-large` thành `model.tar.gz`; viết `inference.py` tùy chỉnh mô phỏng đúng hành vi của fastembed (prefix query/passage, mean pooling có attention-mask, chuẩn hóa L2) để tương thích với các vector đã upsert sẵn trong Qdrant | 20/07/2026 | |
+| 3 | Thiết lập deploy bằng **SageMaker Python SDK** (`HuggingFaceModel` + `ServerlessInferenceConfig`, CPU) — nút "Deploy on SageMaker AI" one-click của HuggingFace chỉ nhắm tới real-time GPU endpoint, không hỗ trợ Serverless Inference | 21/07/2026 | |
+| 4 | Cấu hình **AWS Budget Alert** (~$20/tháng, ngưỡng 50%/80% chi tiêu thực tế và 100% dự báo) và bật CloudWatch billing/Free Tier alert trước khi deploy tiếp | 22/07/2026 | |
+| 5 | Xử lý merge conflict giữa nhánh `feat/semantic-search` của mình và nhánh `feat/refactor` của nhóm (hai file `search.py` viết độc lập trùng tên class `SearchService`); hủy merge, push code của mình, và chuyển quyết định kiến trúc cho nhóm quyết định | 23/07/2026 | |
+| 6 | Test pipeline `search_service` end-to-end ở local; viết và đăng blog lên AWS Study Group; hoàn thiện Self-evaluation, Sharing & Feedback, rà soát toàn bộ báo cáo | 24/07/2026 – 30/07/2026 | [Blogs Posted](/vi/3-blogsposted/), [Self-evaluation](/vi/6-self-evaluation/), [Feedback](/vi/7-feedback/) |
 
 ### Kết quả đạt được tuần 8:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* Hoàn thành đóng gói `model.tar.gz` cho `multilingual-e5-large` và file `inference.py` tùy chỉnh tương thích.
+* Rút ra cách deploy SageMaker đúng để không vượt ngân sách: dùng SDK với `ServerlessInferenceConfig` thay vì nút UI one-click (vốn chỉ hỗ trợ real-time GPU endpoint).
+* Thiết lập AWS Budget Alert và CloudWatch billing/Free Tier alert để kiểm soát chi phí AWS của project.
+* Xử lý đúng cách một merge conflict trên code dùng chung: hủy merge thay vì tự ý resolve, và chuyển quyết định kiến trúc hợp nhất `search.py` cho cả nhóm.
+* Ghi nhận việc deploy embedding model lên SageMaker **vẫn đang bị chặn do chờ xác nhận S3 bucket** từ bạn phụ trách quản trị AWS account, vì Cloudflare R2 (nơi nhóm lưu video) không tương thích với cách SageMaker fetch artifact; endpoint cho Whisper và BLIP vẫn còn phải deploy sau đó.
+* Hoàn thành test end-to-end pipeline search ở local và hoàn tất các phần còn lại của báo cáo thực tập (blog, self-evaluation, feedback).

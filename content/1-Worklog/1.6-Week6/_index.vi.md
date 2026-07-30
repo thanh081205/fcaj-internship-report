@@ -5,54 +5,26 @@ weight: 1
 chapter: false
 pre: " <b> 1.6. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-
 ### Mục tiêu tuần 6:
 
-* Kết nối, làm quen với các thành viên trong First Cloud AI Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+* Học container orchestration trên AWS ở mức nâng cao hơn ECS cơ bản.
+* Xác định phạm vi và viết Proposal cho project Workshop cá nhân: tính năng **semantic search** cho `VideoPlatformServer`, một nền tảng chia sẻ/livestream video của nhóm (mình phụ trách riêng `search_service` bằng Python/FastAPI, một bạn khác phụ trách S3/quản trị AWS account, một bạn phụ trách `api_service` bằng NestJS/TypeScript).
+* Tham gia buổi chia sẻ kỹ thuật tại văn phòng AWS.
 
-### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCAJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-
+### Công việc thực hiện trong tuần:
+| Thứ | Công việc | Ngày | Nguồn tài liệu |
+| --- | --- | --- | --- |
+| 2 | Containerization với **Amazon ECS và AWS Fargate**: container serverless | 06/07/2026 | <https://000067.awsstudygroup.com> |
+| 3 | Làm quen **Amazon EKS**: cluster, node group, kubectl | 07/07/2026 | <https://000126.awsstudygroup.com> |
+| 4 | Soạn Proposal cho Workshop: semantic search trên nội dung video (transcription + caption hình ảnh + embedding + vector search) | 08/07/2026 | [Proposal](/vi/2-proposal/) |
+| 5 | Thiết kế kiến trúc `search_service`: hàng đợi RabbitMQ, vector database Qdrant, ranh giới service với `api_service` của nhóm | 09/07/2026 | |
+| 6 | Dựng hạ tầng nền cho `search_service`: RabbitMQ, Qdrant, PostgreSQL, Redis qua Docker Compose; tạo queue riêng `video-semantic-indexing` tách biệt với queue `video-processing` (NestJS BullMQ) của nhóm | 10/07/2026 | |
+| 7 (T7) | Tham gia **AWS Study Group – FCAJ Tech Sharing Session** tại văn phòng AWS (xem [Event 1](/vi/4-eventparticipated/4.2-event2/)) | 11/07/2026 | |
 
 ### Kết quả đạt được tuần 6:
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* Triển khai container trên Amazon ECS với Fargate và dựng thử cluster Amazon EKS đầu tiên.
+* Hoàn thành bản nháp đầu tiên của Proposal, xác định rõ phạm vi tính năng semantic search cho nền tảng video của nhóm.
+* Thiết kế `search_service` như một microservice Python/FastAPI độc lập, tách biệt với `api_service` của nhóm.
+* Rút ra bài học về **cô lập hàng đợi (queue isolation)**: queue RabbitMQ riêng `video-semantic-indexing` giúp tránh việc job bị chia lẫn với queue `video-processing` sẵn có của nhóm.
+* Tham gia buổi chia sẻ kỹ thuật bên ngoài về chiến lược ôn thi chứng chỉ AWS, AWS Security Agent, và best practice về SLA/monitoring — xem chi tiết ở mục [Events Participated](/vi/4-eventparticipated/).

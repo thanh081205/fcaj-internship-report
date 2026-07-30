@@ -5,53 +5,27 @@ weight: 1
 chapter: false
 pre: " <b> 1.7. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
-
-
 ### Week 7 Objectives:
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+* Build the complete `search_service` ML pipeline locally: transcription, captioning fallback, embeddings, vector storage, and hybrid search.
+* Benchmark different retrieval strategies and pick the best one for production.
+* Fix data-quality and API-compatibility bugs found during testing.
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-
+### Tasks carried out this week:
+| Day | Task | Date | Reference Material |
+| --- | --- | --- | --- |
+| 1 (Mon) | Implement **transcription** with Whisper (`faster-whisper`, "small" model), with `no_speech_prob` filtering at both video and chunk level | 13/07/2026 | |
+| 2 (Tue) | Implement **BLIP** image-captioning fallback for videos with no audio track or silent audio | 14/07/2026 | |
+| 3 (Wed) | Implement **embeddings**: `multilingual-e5-large` (1024-dim dense vectors) + BM25/IDF sparse model; store in **Qdrant** (`video_chunks` collection, `uuid5` point IDs) with `userId`/`visibility` propagated end-to-end through RabbitMQ → Qdrant (owner always sees their content; others only see PUBLIC) | 15/07/2026 | |
+| 4 (Thu) | Implement and benchmark 3 **search methods** — dense-only, sparse-only (BM25), and hybrid RRF fusion — using Precision@3, Recall@3, and MRR | 16/07/2026 | |
+| 5 (Fri) | Debug data-quality issues found during benchmarking; write up findings in a benchmark report (`bao-cao-dense-sparse-hybrid.md`) for the team | 17/07/2026 | |
 
 ### Week 7 Achievements:
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+* Completed a fully working `search_service` ML pipeline locally, end to end (ingest → transcribe/caption → embed → index → search).
+* Found that **dense-only retrieval outperforms hybrid** (MRR ≈ 0.900 vs ≈ 0.684): unweighted RRF fusion degrades when the sparse (BM25) side fails on cross-lingual queries, so dense-only was chosen as the safer default for this use case.
+* Fixed a **diacritics-symmetry bug** in BM25: stripping Vietnamese diacritics at query time while indexing raw accented text broke retrieval; fixed by applying `normalize_transcript_text()` (diacritics-preserving, `re.UNICODE`) symmetrically at both indexing and query time.
+* Found and tracked a breaking change in `qdrant-client==1.18.0` (`FusionQuery` API: `function=` → `fusion=`) affecting `search_points()`.
+* Fixed a variable-shadowing bug caused by naming both the e5 and Whisper models `model`; renamed to `e5_model`/`whisper_model` for clarity.
+* Learned that **cosine similarity has a ~0.82 noise floor** for `multilingual-e5` regardless of text content — an expected model-level property (anisotropy), not a bug.
+* Produced a benchmark report for the team documenting the dense vs. sparse vs. hybrid comparison and the recommendation to use dense-only in production.

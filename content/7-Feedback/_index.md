@@ -6,42 +6,36 @@ chapter: false
 pre: " <b> 7. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
-
-> Here, you can freely share your personal opinions about your experience participating in the First Cloud AI Journey program. This will help the FCAJ team improve any shortcomings based on the following aspects:
-
 ### Overall Evaluation
 
-**1. Working Environment**  
-The working environment is very friendly and open. FCAJ members are always willing to help whenever I encounter difficulties, even outside working hours. The workspace is tidy and comfortable, helping me focus better. However, I think it would be nice to have more social gatherings or team bonding activities to strengthen relationships.
+**1. Working Environment**
+The AWS office space (26th Floor, Bitexco Tower) is comfortable and well set up for focused work, and it was also the venue for community sessions like Community Day, which made the internship feel connected to a wider builder community rather than just a desk job.
 
-**2. Support from Mentor / Team Admin**  
-The mentor provides very detailed guidance, explains clearly when I don’t understand, and always encourages me to ask questions. The admin team supports administrative tasks, provides necessary documents, and creates favorable conditions for me to work effectively. I especially appreciate that the mentor allows me to try and solve problems myself instead of just giving the answer.
+**2. Support from Mentor / Team Admin**
+My mentor gave me the space to own the semantic search feature end to end — including letting me work through technical decisions and even a merge conflict with a teammate's branch on my own — while still being available to unblock me when I was stuck (e.g., discussing the SageMaker Serverless Inference deployment path). The admin team handled office access and event logistics smoothly.
 
-**3. Relevance of Work to Academic Major**  
-The tasks I was assigned align well with the knowledge I learned at university, while also introducing me to new areas I had never encountered before. This allowed me to both strengthen my foundational knowledge and gain practical skills.
+**3. Relevance of Work to Academic Major**
+Building the `search_service` pipeline (transcription, embeddings, vector search, benchmarking) connected directly to my AI specialization, while the AWS deployment side (SageMaker, IAM, budgets, CloudWatch) pushed me into infrastructure and MLOps territory I hadn't covered much in school.
 
-**4. Learning & Skill Development Opportunities**  
-During the internship, I learned many new skills such as using project management tools, teamwork skills, and professional communication in a corporate environment. The mentor also shared valuable real-world experiences that helped me better plan my career path.
+**4. Learning & Skill Development Opportunities**
+Beyond the technical pipeline itself, I learned to benchmark retrieval strategies rigorously (Precision@3, Recall@3, MRR) instead of trusting intuition, to communicate findings to a team through a written report, and to navigate a real cross-team dependency (waiting on a teammate's S3 bucket to unblock deployment) without it stalling my own progress.
 
-**5. Company Culture & Team Spirit**  
-The company culture is very positive: everyone respects each other, works seriously but still keeps things enjoyable. When there are urgent projects, everyone works together and supports one another regardless of their position. This made me feel like a real part of the team, even as an intern.
+**5. Company Culture & Team Spirit**
+The FCAJ community felt collaborative rather than competitive — events like the Community Day sharing session gave FCJ members a platform to teach each other, and the willingness of previous cohorts to write things like the FCJ study roadmap made ramping up much easier.
 
-**6. Internship Policies / Benefits**  
-The company provides an internship allowance and offers flexible working hours when needed. In addition, having the opportunity to join internal training sessions is a big plus.
+**6. Internship Policies / Benefits**
+Flexible access to the AWS office for events and clear registration/approval process (via the FCAJ portal) made it easy to plan around both my coursework and the internship.
 
 ---
 
 ### Additional Questions
-- What did you find **most satisfying** during your internship?  
-- What do you think the company **should improve** for future interns?  
-- If recommending to a friend, would you **suggest they intern here**? Why or why not?  
+- **Most satisfying moment:** seeing the dense-vs-hybrid benchmark numbers confirm a real, non-obvious engineering decision (dense-only over hybrid RRF) rather than just shipping a default configuration.
+- **What could improve:** clearer upfront guidance on shared infrastructure ownership (e.g., who owns the S3 bucket, account limits like SageMaker Serverless concurrency) so cross-team blockers surface earlier.
+- **Would I recommend it:** yes — the combination of a real open-ended technical project, a supportive mentor, and an active community (events, blogs, study group) is hard to find in a short internship.
 
 ---
 
 ### Suggestions & Expectations
-- Do you have any suggestions to improve the internship experience?  
-- Would you like to continue this program in the future?  
-- Any other comments (free sharing):
+- A short, shared checklist for AWS account/resource ownership across a team project (who owns S3, budgets, IAM) would help avoid the kind of blocker I hit with SageMaker deployment.
+- I'd be interested in continuing to contribute to the AWS Study Group even after the program ends.
+- Overall, this internship gave me a much clearer picture of what it takes to take an ML idea from a notebook to a deployed, benchmarked, cost-controlled AWS service — and I'd gladly continue in this direction.

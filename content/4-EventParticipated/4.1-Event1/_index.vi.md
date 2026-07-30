@@ -6,120 +6,87 @@ chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+# Bài thu hoạch: "First Cloud Journey (FCJ) Community Day"
 
-# Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+**Thời gian:** 11/07/2026
 
-### Mục Đích Của Sự Kiện
+**Địa điểm:** Tầng 26, Bitexco Tower, 02 Hải Triều, Phường Sài Gòn, TP. Hồ Chí Minh
 
-- Chia sẻ best practices trong thiết kế ứng dụng hiện đại
-- Giới thiệu phương pháp DDD và event-driven architecture
-- Hướng dẫn lựa chọn compute services phù hợp
-- Giới thiệu công cụ AI hỗ trợ development lifecycle
+**Vai trò:** Người tham dự
 
-### Danh Sách Diễn Giả
+### Tổng quan sự kiện
 
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+Community Day là sự kiện chia sẻ đa chủ đề tại văn phòng AWS, thuộc cộng đồng First Cloud Journey (FCJ), với 6 bài trình bày liên tiếp từ các thành viên và cựu thành viên FCJ, xoay quanh bảo mật, nền tảng DevOps, phát triển sự nghiệp, networking trong game, làm việc nhóm, và generative AI.
 
-### Nội Dung Nổi Bật
+### Bài nói 1 — "WAF + ML for Cyber Attack Detection" (Diễn giả: Lê Hoàng Gia Đại)
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+Xây dựng hệ thống phát hiện xâm nhập mạng (NIDS) dựa trên Machine Learning để bổ trợ cho AWS WAF:
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+- **Vì sao chỉ dùng WAF là chưa đủ:** cơ chế rule-based của AWS WAF xử lý tốt các mẫu tấn công đã biết, nhưng gặp khó với tấn công zero-day, hybrid/spoofing, và các hành vi bất thường chưa từng thấy.
+- **Cách tiếp cận NIDS:** huấn luyện model trên bộ dữ liệu CSE-CIC-IDS2018 (UNB/CIC), bao gồm các nhãn tấn công như DoS, brute force, SQL injection, DDoS; dùng LightGBM, đánh giá bằng confusion matrix, và xử lý mất cân bằng lớp dữ liệu để cải thiện phát hiện các loại tấn công thiểu số.
+- **Kiến trúc AWS:** kết hợp VPC, EC2, ALB, WAF, S3, Kinesis Data Firehose, Lambda, Security Hub, GuardDuty, Inspector, SNS, IAM, Config và CloudWatch, đối chiếu dự đoán của NIDS với sự kiện từ WAF trên một dashboard thời gian thực.
+- **Bài học rút ra:** chất lượng dữ liệu quyết định hiệu năng ML; chỉ dựa vào signature-based là chưa đủ; kết hợp ML-based NIDS với AWS WAF tạo ra lớp phòng thủ thích ứng, nhiều tầng.
 
-#### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
+### Bài nói 2 — "Docker – A Containerization Technology" (Diễn giả: Bao Huynh)
 
-Chuyển đổi thành hệ thống modular – từng chức năng là một **dịch vụ độc lập** giao tiếp với nhau qua **sự kiện** với 3 trụ cột cốt lõi:
+Giới thiệu containerization dễ tiếp cận cho người mới:
 
-- **Queue Management**: Xử lý tác vụ bất đồng bộ
-- **Caching Strategy:** Tối ưu performance
-- **Message Handling:** Giao tiếp linh hoạt giữa services
+- **Virtualization vs. containerization:** mỗi VM mang theo cả một hệ điều hành (nặng, cập nhật chậm); container chỉ đóng gói ứng dụng cùng những gì nó cần, nhẹ và nhất quán trên mọi máy.
+- **Kiến thức nền Docker:** image, container, Dockerfile, và cơ chế cache theo layer (layer không đổi được tái sử dụng; layer thay đổi sẽ khiến layer đó và các layer sau phải build lại).
+- **Use case:** pipeline CI/CD, kiến trúc microservices, môi trường dev/test, ứng dụng cloud-native, và hiện đại hóa ứng dụng cũ.
 
-#### Domain-Driven Design (DDD)
+### Bài nói 3 — "From IT Helpdesk to Senior Sysadmin" (Diễn giả: Tran Trung Vinh)
 
-- **Phương pháp 4 bước**: Xác định domain events → sắp xếp timeline → identify actors → xác định bounded contexts
-- **Case study bookstore**: Minh họa cách áp dụng DDD thực tế
-- **Context mapping**: 7 patterns tích hợp bounded contexts
+Chia sẻ hành trình sự nghiệp dành cho sinh viên và nhân sự IT junior:
 
-#### Event-Driven Architecture
+- **Con đường đi:** bắt đầu từ IT Helpdesk không có lợi thế đặc biệt, xây dựng kỹ năng Linux/networking, lab thực hành, và troubleshooting dưới áp lực trước khi chuyển hẳn sang vai trò Sysadmin.
+- **Cuộc sống của một Sysadmin:** provisioning server, quản lý mạng, vá lỗi bảo mật, capacity planning — với nguyên tắc cốt lõi "không bao giờ test trên production".
+- **Chuyển đổi sang Cloud/DevOps:** từ on-premise, scale thủ công sang tư duy cloud (AWS, elastic scaling, managed service), Infrastructure as Code (Terraform), và văn hóa DevOps (CI/CD, Docker).
+- **Lời khuyên sự nghiệp:** đào sâu 1-2 kỹ năng cốt lõi trước khi mở rộng, xây dựng portfolio thực chiến (quan trọng hơn chỉ có chứng chỉ), và kiên trì bất kể điểm xuất phát.
 
-- **3 patterns tích hợp**: Publish/Subscribe, Point-to-point, Streaming
-- **Lợi ích**: Loose coupling, scalability, resilience
-- **So sánh sync vs async**: Hiểu rõ trade-offs (sự đánh đổi)
+### Bài nói 4 — "Multiplayer in the Cloud: Connecting Godot Clients with AWS WebSockets" (Diễn giả: Nguyen Quoc Bao)
 
-#### Compute Evolution
+Xây dựng multiplayer thời gian thực bằng dịch vụ serverless của AWS kết hợp game engine Godot:
 
-- **Shared Responsibility Model**: Từ EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria lựa chọn phù hợp
+- **Chọn kiến trúc:** so sánh UDP/ENet (độ trễ thấp nhất, phù hợp FPS/đua xe), WebSocket (full-duplex, tin cậy, phù hợp game theo lượt/lobby/chat), và HTTP Polling (đơn giản nhưng độ trễ cao) — WebSocket được chọn cho game theo lượt.
+- **Kiến trúc AWS:** API Gateway WebSocket API (route `$connect`/`$disconnect`/`$default`) → Lambda (Node.js) → DynamoDB (dùng `connectionId` làm partition key, lưu trạng thái trận đấu) → CloudWatch để log.
+- **Tích hợp Godot client:** dùng `WebSocketPeer` để kết nối, poll mỗi frame, gửi/nhận message JSON để điều khiển matchmaking và trạng thái game.
+- **Thách thức gặp phải:** kết nối "chết" (stale) gây lỗi `GoneException`, chi phí scan toàn bảng DynamoDB cho matchmaking, và bản chất stateless của Lambda buộc mọi trạng thái game phải đi qua lại DynamoDB.
+- **Hướng tiếp theo:** AWS GameLift cho các game cần đồng bộ liên tục, tần suất cao (so với WebSocket + Lambda phù hợp hơn cho game theo lượt/lobby).
 
-#### Amazon Q Developer
+### Bài nói 5 — "The Art of Effective Teamwork" (Diễn giả: Truong Huy Phuoc)
 
-- **SDLC automation**: Từ planning đến maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
+Bài chia sẻ kỹ năng mềm về làm việc nhóm hiệu quả:
 
-### Những Gì Học Được
+- **4 quy tắc vàng:** mục tiêu rõ ràng và được chia sẻ chung, đúng người đúng việc, giao tiếp cởi mở & lắng nghe chủ động, và trách nhiệm cá nhân.
+- **Công cụ số hỗ trợ teamwork:** ClickUp, Trello, Slack, Google Workspace, và Discord để phối hợp và giao tiếp.
 
-#### Tư Duy Thiết Kế
+### Bài nói 6 — "GraphRAG: Xây dựng ứng dụng GraphRAG với Amazon Bedrock và Amazon Neptune" (Diễn giả: Viet Phat)
 
-- **Business-first approach**: Luôn bắt đầu từ business domain, không phải technology
-- **Ubiquitous language**: Importance của common vocabulary giữa business và tech teams
-- **Bounded contexts**: Cách identify và manage complexity trong large systems
+Vượt qua giới hạn của RAG thông thường với các câu hỏi cần suy luận nhiều bước (multi-hop):
 
-#### Kiến Trúc Kỹ Thuật
+- **Giới hạn của RAG:** pipeline RAG thông thường gặp khó với câu hỏi cần nối chuỗi thông tin qua nhiều thực thể/tài liệu (ví dụ: "Trụ sở công ty được mua lại bởi công ty do Jeff Bezos sáng lập nằm ở đâu?").
+- **Giải pháp của GraphRAG:** lưu quan hệ tường minh dưới dạng cạnh (edge) trong đồ thị và dùng graph traversal để suy luận multi-hop thay vì chỉ dựa vào độ tương đồng vector.
+- **Hai hướng triển khai trên AWS:**
+  - *Fully managed:* Amazon Bedrock Knowledge Bases (chunking, trích xuất entity, sinh embedding) + Amazon Neptune Analytics (lưu trữ đồ thị, khám phá quan hệ).
+  - *Custom:* pipeline LlamaIndex để chuẩn bị dữ liệu/xây dựng knowledge graph + Amazon Neptune để lưu trữ, truy vấn multi-hop, và Cypher query.
 
-- **Event storming technique**: Phương pháp thực tế để mô hình hóa quy trình kinh doanh
-- Sử dụng **Event-driven communication** thay vì synchronous calls
-- **Integration patterns**: Hiểu khi nào dùng sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria chọn từ VM → containers → serverless
+### Bài học rút ra
 
-#### Chiến Lược Hiện Đại Hóa
+- Bảo mật nhiều lớp (WAF rule-based + phát hiện bất thường bằng ML) bắt được các mối đe dọa mà từng lớp riêng lẻ có thể bỏ sót.
+- Containerization giải quyết vấn đề "chạy được trên máy tôi" mà virtualization dựa trên VM truyền thống gặp khó khăn.
+- Một portfolio dự án thực chiến mạnh quan trọng cho sự nghiệp hơn chỉ có chứng chỉ — và "không bao giờ test trên production" là nguyên tắc vận hành phổ quát.
+- Chọn đúng kiến trúc networking (UDP, WebSocket, hay HTTP polling) phụ thuộc hoàn toàn vào yêu cầu thời gian thực của use case, không có một lựa chọn "tốt nhất" chung cho mọi trường hợp.
+- Làm việc nhóm hiệu quả phụ thuộc vào mục tiêu chung, đúng người đúng việc, và trách nhiệm cá nhân — không chỉ là công cụ phối hợp.
+- GraphRAG mở rộng RAG thông thường bằng cách mô hình hóa quan hệ tường minh, cho phép suy luận multi-hop mà vector retrieval thuần túy không hỗ trợ được.
 
-- **Phased approach**: Không rush, phải có roadmap rõ ràng
-- **7Rs framework**: Nhiều con đường khác nhau tùy thuộc vào đặc điểm của mỗi ứng dụng
-- **ROI measurement**: Cost reduction + business agility
+### Hình ảnh sự kiện
 
-### Ứng Dụng Vào Công Việc
+![Slide về Network Intrusion Detection System (NIDS) trong bài nói WAF + ML](/images/4-EventParticipated/4.1-Event1/nids-talk.jpg)
+*Slide kiến trúc NIDS từ bài nói "WAF + ML for Cyber Attack Detection"*
 
-- **Áp dụng DDD** cho project hiện tại: Event storming sessions với business team
-- **Refactor microservices**: Sử dụng bounded contexts để identify service boundaries
-- **Implement event-driven patterns**: Thay thế một số sync calls bằng async messaging
-- **Serverless adoption**: Pilot AWS Lambda cho một số use cases phù hợp
-- **Try Amazon Q Developer**: Integrate vào development workflow để boost productivity
+![Slide so sánh kiến trúc UDP/ENet, WebSocket và HTTP Polling](/images/4-EventParticipated/4.1-Event1/godot-websocket-talk.jpg)
+*Chọn kiến trúc networking cho multiplayer, từ bài nói Godot + AWS WebSocket*
 
-### Trải nghiệm trong event
-
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
-
-#### Học hỏi từ các diễn giả có chuyên môn cao
-- Các diễn giả đến từ AWS và các tổ chức công nghệ lớn đã chia sẻ **best practices** trong thiết kế ứng dụng hiện đại.
-- Qua các case study thực tế, tôi hiểu rõ hơn cách áp dụng **Domain-Driven Design (DDD)** và **Event-Driven Architecture** vào các project lớn.
-
-#### Trải nghiệm kỹ thuật thực tế
-- Tham gia các phiên trình bày về **event storming** giúp tôi hình dung cách **mô hình hóa quy trình kinh doanh** thành các domain events.
-- Học cách **phân tách microservices** và xác định **bounded contexts** để quản lý sự phức tạp của hệ thống lớn.
-- Hiểu rõ trade-offs giữa **synchronous và asynchronous communication** cũng như các pattern tích hợp như **pub/sub, point-to-point, streaming**.
-
-#### Ứng dụng công cụ hiện đại
-- Trực tiếp tìm hiểu về **Amazon Q Developer**, công cụ AI hỗ trợ SDLC từ lập kế hoạch đến maintenance.
-- Học cách **tự động hóa code transformation** và pilot serverless với **AWS Lambda**, từ đó nâng cao năng suất phát triển.
-
-#### Kết nối và trao đổi
-- Workshop tạo cơ hội trao đổi trực tiếp với các chuyên gia, đồng nghiệp và team business, giúp **nâng cao ngôn ngữ chung (ubiquitous language)** giữa business và tech.
-- Qua các ví dụ thực tế, tôi nhận ra tầm quan trọng của **business-first approach**, luôn bắt đầu từ nhu cầu kinh doanh thay vì chỉ tập trung vào công nghệ.
-
-#### Bài học rút ra
-- Việc áp dụng DDD và event-driven patterns giúp giảm **coupling**, tăng **scalability** và **resilience** cho hệ thống.
-- Chiến lược hiện đại hóa cần **phased approach** và đo lường **ROI**, không nên vội vàng chuyển đổi toàn bộ hệ thống.
-- Các công cụ AI như Amazon Q Developer có thể **boost productivity** nếu được tích hợp vào workflow phát triển hiện tại.
-
-#### Một số hình ảnh khi tham gia sự kiện
-* Thêm các hình ảnh của các bạn tại đây
-> Tổng thể, sự kiện không chỉ cung cấp kiến thức kỹ thuật mà còn giúp tôi thay đổi cách tư duy về thiết kế ứng dụng, hiện đại hóa hệ thống và phối hợp hiệu quả hơn giữa các team.
+![Slide disclaimer mở đầu bài nói về Docker với giọng điệu thân thiện](/images/4-EventParticipated/4.1-Event1/docker-talk.jpg)
+*Mở đầu bài nói về containerization với Docker*

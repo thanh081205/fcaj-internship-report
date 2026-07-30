@@ -1,31 +1,55 @@
 ---
 title: "Blog 2"
 date: 2024-01-01
-weight: 1
+weight: 2
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+# ZERO-SECRET DEPLOYMENT WITH SECRETS MANAGER + IAM ROLE + IMDSV2 — A 4-HOUR DEBUGGING LESSON OVER ONE NEWLINE CHARACTER
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+In my first month building CI/CD, I was still copying a `.env` file to the server via `scp` — the most serious mistake of my internship. I found out the hard way after 4 hours of debugging why `FIREBASE_PRIVATE_KEY` kept getting corrupted, because `jq` wasn't escaping newlines correctly. From that point on, I refactored the pipeline to achieve **"zero-secret deployment"**: secrets live only in AWS Secrets Manager, EC2 fetches them via IAM Role + IMDSv2 on every deploy, and they disappear right after the container starts.
 
-Key points to know:
+## Golden Rules
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+* Secrets never sit inside a Dockerfile (`COPY`).
+* Never commit them to git.
+* Never keep a permanent `.env` file on EC2.
+* Right after the container starts, `rm -f` the temporary `.env` file immediately.
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+## IAM Role vs. Access Key
 
-...Image...
+* **IAM User** carries long-term credentials — high risk if leaked.
+* **IAM Role** issues temporary credentials via STS, valid for 1 hour, auto-rotating.
+* **Setup:** create an `EC2-Backend-Role`, attach the `SecretsManagerReadWrite` policy, and attach it to the EC2 instance — the instance fetches credentials via IMDSv2 automatically, with no access key ever hardcoded.
 
-...Link...
+## The Newline Bug
 
-...Guide...
+A real private key contains an actual newline character (`0x0A`), but storing it in a JSON secret requires the escape sequence `\n`. `jq` treated `\n` as plain text instead of an escape sequence → Firebase threw `"Invalid PEM formatted key"`.
+
+The fix: use a Python heredoc (`python3 - <<'PYEOF'` + `json.loads()`) instead of `jq`, since Python correctly follows the JSON spec.
+
+## Revisiting the 2019 Capital One Breach
+
+106 million records were exposed through a combination of an SSRF vulnerability in a WAF and IMDSv1 accepting a simple GET request to retrieve STS credentials. IMDSv2 blocks this with a session-oriented protocol — a PUT request with a token header is required before any GET, and SSRF exploits typically can't send a PUT.
+
+## Enforcing IMDSv2
+
+```
+aws ec2 modify-instance-metadata-options --instance-id i-xxx \
+  --http-tokens required --http-put-response-hop-limit 3 --http-endpoint enabled
+```
+
+You can enforce this account-wide with an SCP that blocks `ec2:RunInstances` when `HttpTokens=required` is missing.
+
+## Rotation & Auditing
+
+* Auto-rotate via Lambda every 90 days (`aws secretsmanager rotate-secret ...`).
+* CloudTrail logs every `GetSecretValue` call.
+* A CloudWatch Alarm fires if the same instance calls it more than 10 times per hour.
+
+## Key Takeaway
+
+When working with structured data (JSON/YAML/TOML), always use a language with a proper parser (`json.loads`, `yaml.safe_load`) — never `jq`/`sed`/`awk`/`grep`. And from the Capital One breach: layered defense is not optional — skip IMDSv2 and proper IAM Role usage, and one small SSRF vulnerability can turn into a disaster.
+
+🔗 **Original post on AWS Study Group:** [View on Facebook](https://www.facebook.com/groups/awsstudygroupfcj/posts/2226205278144432)

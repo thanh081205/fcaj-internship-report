@@ -6,121 +6,58 @@ chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
+# Summary Report: "AWS Study Group – FCAJ Tech Sharing Session"
 
-# Summary Report: “GenAI-powered App-DB Modernization workshop”
+**Date & Time:** July 11, 2026
 
-### Event Objectives
+**Location:** 26th Floor, Bitexco Tower, 02 Hai Trieu Street, Saigon Ward, Ho Chi Minh City
 
-- Share best practices in modern application design
-- Introduce Domain-Driven Design (DDD) and event-driven architecture
-- Provide guidance on selecting the right compute services
-- Present AI tools to support the development lifecycle
+**Role:** Attendee
 
-### Speakers
+### Event Overview
 
-- **Jignesh Shah** – Director, Open Source Databases
-- **Erica Liu** – Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** – Assc. Specialist SA, Serverless Amazon Web Services
+This session was a technical sharing event hosted at the AWS office as part of the First Cloud AI Journey (FCAJ) program, featuring three back-to-back talks from community speakers on certification, security automation, and observability.
 
-### Key Highlights
+### Talk 1 — "Inside The Exam: AWS Cloud Practitioner" (Speaker: Ngo Le Tan Huy)
 
-#### Identifying the drawbacks of legacy application architecture
+A strategic roadmap for passing the AWS Certified Cloud Practitioner (CLF-C02) exam:
 
-- Long product release cycles → Lost revenue/missed opportunities  
-- Inefficient operations → Reduced productivity, higher costs  
-- Non-compliance with security regulations → Security breaches, loss of reputation  
+- **Exam structure:** 65 multiple-choice/multiple-response questions, 90 minutes (+30 minutes for non-native English speakers), passing score 700/1000, valid for 3 years.
+- **Domain weighting:** Cloud Concepts (24%), Security and Compliance (30%), Cloud Technology and Services (34%), Billing/Pricing/Support (12%).
+- **Preparation strategy:** "map keyword thinking" (associating services with real-world use-case keywords), reviewing wrong answers instead of just doing mock tests, and hands-on practice on the AWS Free Tier.
+- **Exam-day tips:** elimination technique, not overthinking foundational-level questions, watching for tricky wording ("not", "least cost", "most scalable"), and preparing ID documents for Pearson VUE test centers.
 
-#### Transitioning to modern application architecture – Microservices
+### Talk 2 — "Securing Your Web Apps With AWS Security Agent" (Speaker: Nguyen Tuan Thinh)
 
-Migrating to a modular system — each function is an **independent service** communicating via **events**, built on three core pillars:
+An introduction to AWS's autonomous security agent, powered by Amazon Bedrock:
 
-- **Queue Management**: Handle asynchronous tasks  
-- **Caching Strategy**: Optimize performance  
-- **Message Handling**: Flexible inter-service communication  
+- **Problem addressed:** manual pentests are slow, expensive ($5k–$20k per engagement), and inconsistent.
+- **Capabilities:** covers the full security lifecycle — Design Review (architecture docs vs. PCI DSS/NIST CSF/AWS Well-Architected), Code Review (auto-scans PRs on GitHub/GitLab, suggests fixes), and automated Penetration Testing (multi-step exploit chains, e.g., IDOR → XSS, with verifiable proof of exploitation).
+- **Pricing:** pay-as-you-go per task-hour (~$50/hour), free trial with 400 task-hours over 2 months; a real case study cost $1,500–$2,500 in agent work versus a traditional pentest team.
+- **Limitations:** blocked by strong auth (MFA/biometrics/mTLS), struggles with business-logic flaws, and requires monitoring to control task-hour consumption on complex apps.
 
-#### Domain-Driven Design (DDD)
+### Talk 3 — "SLA and Monitoring: From SLA to Monitoring, What Really Matters" (Speaker: Nguyen Huynh Son)
 
-- **Four-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts  
-- **Bookstore case study**: Demonstrates real-world DDD application  
-- **Context mapping**: 7 patterns for integrating bounded contexts  
+A talk on why infrastructure health metrics alone don't guarantee a good user experience, illustrated with a live demo:
 
-#### Event-Driven Architecture
-
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming  
-- **Benefits**: Loose coupling, scalability, resilience  
-- **Sync vs async comparison**: Understanding the trade-offs  
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: EC2 → ECS → Fargate → Lambda  
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value  
-- **Functions vs Containers**: Criteria for appropriate choice  
-
-#### Amazon Q Developer
-
-- **SDLC automation**: From planning to maintenance  
-- **Code transformation**: Java upgrade, .NET modernization  
-- **AWS Transform agents**: VMware, Mainframe, .NET migration  
+- **Core message:** *Healthy Infrastructure ≠ Healthy User Experience.* AWS's SLA guarantees the cloud; the customer experience is the team's own responsibility.
+- **Monitoring pyramid:** Cloud Provider → Infrastructure → Application → Business → Customer Experience. Lower layers help diagnose root cause; upper layers tell you if users/business are actually impacted.
+- **Live demo:** a 3-tier app (User → ALB → EC2 → RDS) kept showing a fully "green" dashboard (CPU 18%, ALB target healthy, `/health` returning 200 OK) even after the demo broke the security group between EC2 and RDS — because the health check endpoint never touches the database, while the real `/login` path does. Login success rate silently dropped from 100% to 0% with no infrastructure alarm firing.
+- **Takeaway on alerting:** a proper flow needs custom business metrics (e.g., login failure rate) feeding CloudWatch Alarms → SNS → Email/Slack, so the team is notified before customers complain.
 
 ### Key Takeaways
 
-#### Design Mindset
+- Certification prep benefits from pattern recognition (keyword-to-service mapping) more than rote memorization.
+- Security testing is shifting toward AI agents that can autonomously chain and verify exploits, changing the cost/speed trade-off compared to traditional pentesting.
+- Infrastructure-level monitoring (CPU, memory, health checks) is not sufficient on its own — teams need business/user-journey metrics (e.g., login or checkout success rate) to know when users are actually affected.
 
-- **Business-first approach**: Always start from the business domain, not the technology  
-- **Ubiquitous language**: Importance of a shared vocabulary between business and tech teams  
-- **Bounded contexts**: Identifying and managing complexity in large systems  
+### Event Photos
 
-#### Technical Architecture
+![Audience at the AWS office during the sharing session](/images/4-EventParticipated/4.2-Event2/audience-overview.jpg)
+*Full house at the AWS office for the FCAJ tech sharing session*
 
-- **Event storming technique**: Practical method for modeling business processes  
-- Use **event-driven communication** instead of synchronous calls  
-- **Integration patterns**: When to use sync, async, pub/sub, streaming  
-- **Compute spectrum**: Criteria for choosing between VM, containers, and serverless  
+![Live AWS certification quiz on screen during the session](/images/4-EventParticipated/4.2-Event2/certification-quiz.jpg)
+*Interactive AWS certification quiz between talks*
 
-#### Modernization Strategy
-
-- **Phased approach**: No rushing — follow a clear roadmap  
-- **7Rs framework**: Multiple modernization paths depending on the application  
-- **ROI measurement**: Cost reduction + business agility  
-
-### Applying to Work
-
-- **Apply DDD** to current projects: Event storming sessions with business teams  
-- **Refactor microservices**: Use bounded contexts to define service boundaries  
-- **Implement event-driven patterns**: Replace some sync calls with async messaging  
-- **Adopt serverless**: Pilot AWS Lambda for suitable use cases  
-- **Try Amazon Q Developer**: Integrate into the dev workflow to boost productivity  
-
-### Event Experience
-
-Attending the **“GenAI-powered App-DB Modernization”** workshop was extremely valuable, giving me a comprehensive view of modernizing applications and databases using advanced methods and tools. Key experiences included:
-
-#### Learning from highly skilled speakers
-- Experts from AWS and major tech organizations shared **best practices** in modern application design.  
-- Through real-world case studies, I gained a deeper understanding of applying **DDD** and **Event-Driven Architecture** to large projects.  
-
-#### Hands-on technical exposure
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.  
-- Learned how to **split microservices** and define **bounded contexts** to manage large-system complexity.  
-- Understood trade-offs between **synchronous and asynchronous communication** and integration patterns like **pub/sub, point-to-point, streaming**.  
-
-#### Leveraging modern tools
-- Explored **Amazon Q Developer**, an AI tool for SDLC support from planning to maintenance.  
-- Learned to **automate code transformation** and pilot serverless with **AWS Lambda** to improve productivity.  
-
-#### Networking and discussions
-- The workshop offered opportunities to exchange ideas with experts, peers, and business teams, enhancing the **ubiquitous language** between business and tech.  
-- Real-world examples reinforced the importance of the **business-first approach** rather than focusing solely on technology.  
-
-#### Lessons learned
-- Applying DDD and event-driven patterns reduces **coupling** while improving **scalability** and **resilience**.  
-- Modernization requires a **phased approach** with **ROI measurement**; rushing the process can be risky.  
-- AI tools like Amazon Q Developer can significantly **boost productivity** when integrated into the current workflow.  
-
-#### Some event photos
-*Add your event photos here*  
-
-> Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration.
+![Team scoreboard game at the event](/images/4-EventParticipated/4.2-Event2/team-scoreboard-game.jpg)
+*Team scoreboard activity during the session*

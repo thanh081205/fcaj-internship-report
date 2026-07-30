@@ -5,40 +5,37 @@ weight: 7
 chapter: false
 pre: " <b> 7. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
->Tại đây bạn có thể tự do đóng góp ý kiến cá nhân về những trải nghiệm khi tham gia chương trình First Cloud AI Journey, giúp team FCAJ cải thiện những vấn đề còn thiếu sót dựa trên các hạng mục sau:
 
 ### Đánh giá chung
 
-**1. Môi trường làm việc**  
-Môi trường làm việc rất thân thiện và cởi mở. Các thành viên trong FCAJ luôn sẵn sàng hỗ trợ khi mình gặp khó khăn, kể cả ngoài giờ làm việc. Không gian làm việc gọn gàng, thoải mái, giúp mình tập trung tốt hơn. Tuy nhiên, mình nghĩ có thể bổ sung thêm một số buổi giao lưu hoặc team bonding để mọi người hiểu nhau hơn.
+**1. Môi trường làm việc**
+Không gian văn phòng AWS (tầng 26, Bitexco Tower) thoải mái và phù hợp để tập trung làm việc, đồng thời cũng là nơi diễn ra các sự kiện cộng đồng như Community Day, giúp kỳ thực tập cảm giác gắn kết với cộng đồng builder rộng hơn chứ không chỉ là ngồi làm việc một mình.
 
-**2. Sự hỗ trợ của mentor / team admin**  
-Mentor hướng dẫn rất chi tiết, giải thích rõ ràng khi mình chưa hiểu và luôn khuyến khích mình đặt câu hỏi. Team admin hỗ trợ các thủ tục, tài liệu và tạo điều kiện để mình làm việc thuận lợi. Mình đánh giá cao việc mentor cho phép mình thử và tự xử lý vấn đề thay vì chỉ đưa đáp án.
+**2. Sự hỗ trợ của mentor / team admin**
+Mentor cho mình không gian để tự chủ trọn vẹn tính năng semantic search — kể cả để mình tự xử lý các quyết định kỹ thuật và một merge conflict với nhánh của đồng đội — nhưng vẫn sẵn sàng hỗ trợ khi mình bị kẹt (ví dụ khi bàn về hướng deploy SageMaker Serverless Inference). Team admin xử lý việc đăng ký văn phòng và hậu cần sự kiện rất suôn sẻ.
 
-**3. Sự phù hợp giữa công việc và chuyên ngành học**  
-Công việc mình được giao phù hợp với kiến thức mình đã học ở trường, đồng thời mở rộng thêm những mảng mới mà mình chưa từng được tiếp cận. Nhờ vậy, mình vừa củng cố kiến thức nền tảng, vừa học thêm kỹ năng thực tế.
+**3. Sự phù hợp giữa công việc và chuyên ngành học**
+Việc xây dựng pipeline `search_service` (transcription, embedding, vector search, benchmark) gắn liền trực tiếp với chuyên ngành AI của mình, còn phần triển khai trên AWS (SageMaker, IAM, budget, CloudWatch) đẩy mình sang mảng hạ tầng và MLOps mà trước đây ở trường mình chưa tiếp cận nhiều.
 
-**4. Cơ hội học hỏi & phát triển kỹ năng**  
-Trong quá trình thực tập, mình học được nhiều kỹ năng mới như sử dụng công cụ quản lý dự án, kỹ năng làm việc nhóm, và cả cách giao tiếp chuyên nghiệp trong môi trường công ty. Mentor cũng chia sẻ nhiều kinh nghiệm thực tế giúp mình định hướng tốt hơn cho sự nghiệp.
+**4. Cơ hội học hỏi & phát triển kỹ năng**
+Ngoài pipeline kỹ thuật, mình học được cách benchmark các chiến lược retrieval một cách nghiêm túc (Precision@3, Recall@3, MRR) thay vì tin theo cảm tính, cách truyền đạt kết quả cho nhóm qua báo cáo viết tay, và cách xử lý một dependency chéo nhóm thực tế (chờ bucket S3 từ đồng đội để deploy) mà không để nó làm chậm tiến độ của bản thân.
 
-**5. Văn hóa & tinh thần đồng đội**  
-Văn hóa công ty rất tích cực: mọi người tôn trọng lẫn nhau, làm việc nghiêm túc nhưng vẫn vui vẻ. Khi có dự án gấp, mọi người cùng nhau cố gắng, hỗ trợ không phân biệt vị trí. Điều này giúp mình cảm thấy mình là một phần của tập thể, dù chỉ là thực tập sinh.
+**5. Văn hóa & tinh thần đồng đội**
+Cộng đồng FCAJ mang tính hợp tác hơn là cạnh tranh — các sự kiện như buổi chia sẻ Community Day tạo sân chơi để các thành viên FCJ dạy lẫn nhau, và việc các khóa trước sẵn lòng viết lại roadmap học tập của FCJ giúp việc bắt nhịp dễ dàng hơn nhiều.
 
-**6. Chính sách / phúc lợi cho thực tập sinh**  
-Công ty có hỗ trợ phụ cấp thực tập và tạo điều kiện về thời gian linh hoạt khi cần thiết. Ngoài ra, việc được tham gia các buổi đào tạo nội bộ là một điểm cộng lớn.
+**6. Chính sách / phúc lợi cho thực tập sinh**
+Việc đăng ký làm việc tại văn phòng AWS cho các sự kiện linh hoạt, quy trình đăng ký/duyệt rõ ràng (qua portal FCAJ) giúp mình dễ sắp xếp giữa việc học và thực tập.
 
+---
 
 ### Một số câu hỏi khác
-- Điều bạn **hài lòng nhất** trong thời gian thực tập?  
-- Điều bạn nghĩ công ty **cần cải thiện** cho các thực tập sinh sau?  
-- Nếu giới thiệu cho bạn bè, bạn có **khuyên họ thực tập ở đây không**? Vì sao?  
+- **Khoảnh khắc hài lòng nhất:** khi số liệu benchmark dense vs. hybrid xác nhận một quyết định kỹ thuật thật sự có ý nghĩa (chọn dense-only thay vì hybrid RRF), thay vì chỉ ship theo cấu hình mặc định.
+- **Điều có thể cải thiện:** hướng dẫn rõ ràng hơn ngay từ đầu về quyền sở hữu hạ tầng dùng chung (ai phụ trách S3 bucket, giới hạn account như concurrency của SageMaker Serverless) để các điểm nghẽn liên nhóm được phát hiện sớm hơn.
+- **Có giới thiệu cho bạn bè không:** có — sự kết hợp giữa một project kỹ thuật mở thực sự, mentor hỗ trợ tốt, và một cộng đồng năng động (sự kiện, blog, study group) là điều khó tìm thấy trong một kỳ thực tập ngắn.
 
+---
 
 ### Đề xuất & mong muốn
-- Bạn có đề xuất gì để cải thiện trải nghiệm trong kỳ thực tập?  
-- Bạn có muốn tiếp tục chương trình này trong tương lai?
-- Góp ý khác (tự do chia sẻ):
+- Một checklist ngắn, dùng chung cho cả nhóm về quyền sở hữu tài nguyên/account AWS (ai phụ trách S3, budget, IAM) sẽ giúp tránh những điểm nghẽn như mình gặp phải khi deploy SageMaker.
+- Mình muốn tiếp tục đóng góp cho AWS Study Group ngay cả sau khi chương trình kết thúc.
+- Nhìn chung, kỳ thực tập này giúp mình hình dung rõ hơn nhiều về việc đưa một ý tưởng ML từ notebook thành một service AWS được deploy, benchmark và kiểm soát chi phí đầy đủ — và mình rất muốn tiếp tục theo hướng này.

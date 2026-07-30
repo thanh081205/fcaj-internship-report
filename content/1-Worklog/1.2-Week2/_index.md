@@ -5,53 +5,26 @@ weight: 1
 chapter: false
 pre: " <b> 1.2. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
-
-
 ### Week 2 Objectives:
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+* Get hands-on with core AWS storage and database services.
+* Learn to host a static website on S3 and monitor resources with CloudWatch.
+* Practice DNS management with Route 53 and the AWS CLI.
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-
+### Tasks carried out this week:
+| Day | Task | Date | Reference Material |
+| --- | --- | --- | --- |
+| 1 (Mon) | Static Website Hosting with **Amazon S3**: buckets, objects, bucket policies | 08/06/2026 | <https://000057.awsstudygroup.com> |
+| 2 (Tue) | Database Essentials with **Amazon RDS**: engines, Multi-AZ, snapshots | 09/06/2026 | <https://000005.awsstudygroup.com> |
+| 3 (Wed) | NoSQL Database Essentials with **Amazon DynamoDB**: tables, partition/sort keys, read/write capacity | 10/06/2026 | <https://000060.awsstudygroup.com> |
+| 4 (Thu) | Monitoring with **Amazon CloudWatch**: metrics, dashboards, alarms; Hybrid DNS Management with **Amazon Route 53** | 11/06/2026 | <https://000008.awsstudygroup.com>, <https://000010.awsstudygroup.com> |
+| 5 (Fri) | Command Line Operations with **AWS CLI**: scripting common tasks across S3, RDS, DynamoDB | 12/06/2026 | <https://000011.awsstudygroup.com> |
 
 ### Week 2 Achievements:
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Successfully created and configured an AWS Free Tier account.
-
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
-
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
-
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+* Deployed a static website on Amazon S3 and understood bucket policies vs. IAM policies.
+* Provisioned an RDS instance and compared it to DynamoDB for different data-access patterns.
+* Created a DynamoDB table, designed a simple partition/sort key schema, and ran basic read/write operations.
+* Set up CloudWatch dashboards and alarms to monitor EC2/RDS metrics.
+* Configured a hosted zone and DNS record in Route 53.
+* Practiced automating common AWS operations through the CLI instead of the console.

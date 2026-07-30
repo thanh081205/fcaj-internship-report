@@ -7,23 +7,23 @@ chapter: false
 
 # Báo cáo thực tập
 ### Thông tin sinh viên:
-&emsp; **Họ và tên:** Nguyễn Văn A
+&emsp; **Họ và tên:** Vạn Trường Thành
 
-&emsp; **Số điện thoại:** 0989888999
+&emsp; **Số điện thoại:** 0932788559
 
-&emsp; **Email:** Anguyenvan@gmail.com
+&emsp; **Email:** thanh.van081205@hcmut.edu.vn
 
-&emsp; **Trường:** Đại học Sư phạm Kỹ thuật TP.HCM
+&emsp; **Trường:** Đại học Bách Khoa - Đại học Quốc gia TP.HCM
 
-&emsp; **Ngành:** Công nghệ thông tin
+&emsp; **Ngành:** Khoa học máy tính - Chuyên ngành Trí tuệ nhân tạo
 
-&emsp; **Lớp:** AWS082025
+&emsp; **Lớp:** CN23KHM2
 
 &emsp; **Công ty thực tập:** Công ty TNHH Amazon Web Services Viet Nam
 
-&emsp; **Vị trí thực tập:** Workforce Bootcamp - First Cloud AI Journey
+&emsp; **Vị trí thực tập:** AI Engineer - First Cloud AI Journey
 
-&emsp; **Thời gian thực tập:** Từ ngày 12/08/2025 đến ngày 12/11/2025
+&emsp; **Thời gian thực tập:** Từ ngày 01/06/2026 đến ngày 30/07/2026
 
 ![Ảnh đại diện của bạn](/images/avatar.png)
 

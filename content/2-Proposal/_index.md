@@ -5,111 +5,110 @@ weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
-
-# IoT Weather Platform for Lab Research
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+# VideoPlatformServer
+## A Video Sharing Platform with Semantic Search, Deployed on AWS ECS Fargate
 
 ### 1. Executive Summary
-The IoT Weather Platform is designed for the ITea Lab team in Ho Chi Minh City to enhance weather data collection and analysis. It supports up to 5 weather stations, with potential scalability to 10-15, utilizing Raspberry Pi edge devices with ESP32 sensors to transmit data via MQTT. The platform leverages AWS Serverless services to deliver real-time monitoring, predictive analytics, and cost efficiency, with access restricted to 5 lab members via Amazon Cognito.
+VideoPlatformServer is a personal project built during the internship to gain hands-on experience with production-grade microservice architecture on AWS. The system consists of two independent services communicating over bidirectional gRPC: `api_service` (NestJS 11 + Apollo GraphQL) handles authentication, video management, and upload/transcoding; `search_service` (Python FastAPI) handles hybrid search that combines keyword matching with semantic vector similarity via Qdrant. The entire stack runs on AWS ECS Fargate behind CloudFront and an Application Load Balancer, backed by RDS PostgreSQL, ElastiCache (Valkey), and Amazon MQ (RabbitMQ) for asynchronous inter-service messaging, with automated CI/CD through GitHub Actions.
 
 ### 2. Problem Statement
-### What’s the Problem?
-Current weather stations require manual data collection, becoming unmanageable with multiple units. There is no centralized system for real-time data or analytics, and third-party platforms are costly and overly complex.
+### What's the Problem?
+Most personal or learning-oriented AWS projects stop at simple serverless setups (Lambda + API Gateway + S3), missing the harder problems found in real production systems: asynchronous large-file processing, inter-service communication over gRPC and message queues, semantic search backed by a vector database, and running containers consistently across multiple environments (local Docker Compose, staging, and AWS production).
 
 ### The Solution
-The platform uses AWS IoT Core to ingest MQTT data, AWS Lambda and API Gateway for processing, Amazon S3 for storage (including a data lake), and AWS Glue Crawlers and ETL jobs to extract, transform, and load data from the S3 data lake to another S3 bucket for analysis. AWS Amplify with Next.js provides the web interface, and Amazon Cognito ensures secure access. Similar to Thingsboard and CoreIoT, users can register new devices and manage connections, though this platform operates on a smaller scale and is designed for private use. Key features include real-time dashboards, trend analysis, and low operational costs.
+VideoPlatformServer addresses these problems with two clearly separated services. `api_service` handles the video upload flow via S3 presigned URLs, then enqueues an asynchronous transcoding job with BullMQ (running on Redis/ElastiCache Valkey) that converts the video into MPEG-DASH using FFmpeg. When video metadata changes, `api_service` publishes a message through RabbitMQ (Amazon MQ) so that `search_service` can re-index it; `search_service` fetches the full metadata over gRPC, generates embeddings, and upserts them into the Qdrant vector database to power hybrid search (combining keyword scores with vector similarity). Everything is containerized and deployed on ECS Fargate, fronted by a CDN (CloudFront) and a custom domain (Route 53 + ACM).
 
-### Benefits and Return on Investment
-The solution establishes a foundational resource for lab members to develop a larger IoT platform, serving as a study resource, and provides a data foundation for AI enthusiasts for model training or analysis. It reduces manual reporting for each station via a centralized platform, simplifying management and maintenance, and improves data reliability. Monthly costs are $0.66 USD per the AWS Pricing Calculator, with a 12-month total of $7.92 USD. All IoT equipment costs are covered by the existing weather station setup, eliminating additional development expenses. The break-even period of 6-12 months is achieved through significant time savings from reduced manual work.
+### Benefits and Value
+The project delivers practical skills in microservice design, asynchronous messaging, vector/AI search, and AWS production operations (IAM/OIDC, VPC networking, container orchestration, CI/CD) — well beyond the scope of a simple serverless demo. The finished system doubles as a portfolio project and provides a foundation for future extensions such as recommendations or live streaming after the internship.
 
 ### 3. Solution Architecture
-The platform employs a serverless AWS architecture to manage data from 5 Raspberry Pi-based stations, scalable to 15. Data is ingested via AWS IoT Core, stored in an S3 data lake, and processed by AWS Glue Crawlers and ETL jobs to transform and load it into another S3 bucket for analysis. Lambda and API Gateway handle additional processing, while Amplify with Next.js hosts the dashboard, secured by Cognito. The architecture is detailed below:
+Users reach the platform through a custom domain (Route 53) → CloudFront (CDN, TLS) → Application Load Balancer, which routes by path (`/graphql/*` to `api_service`, `/api/*` to `search_service`) → an ECS Fargate cluster running three services: `api-service`, `search-service`, and `qdrant` (a self-hosted vector database persisting data on EFS). The two application services communicate over bidirectional gRPC and both connect to RDS PostgreSQL (relational metadata), ElastiCache Valkey (sessions, BullMQ queues, caching), and Amazon MQ (asynchronous metadata synchronization). Raw and transcoded video files are stored in S3 and served through CloudFront. All compute runs in private subnets and reaches AWS services through VPC Endpoints rather than a NAT Gateway, for cost efficiency.
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
-
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+![VideoPlatformServer Solution Architecture](/images/2-Proposal/solution_architecture.jpg)
 
 ### AWS Services Used
-- **AWS IoT Core**: Ingests MQTT data from 5 stations, scalable to 15.
-- **AWS Lambda**: Processes data and triggers Glue jobs (two functions).
-- **Amazon API Gateway**: Facilitates web app communication.
-- **Amazon S3**: Stores raw data in a data lake and processed outputs (two buckets).
-- **AWS Glue**: Crawlers catalog data, and ETL jobs transform and load it.
-- **AWS Amplify**: Hosts the Next.js web interface.
-- **Amazon Cognito**: Secures access for lab users.
+- **Amazon ECS (Fargate/Fargate Spot)**: Runs containers for `api-service`, `search-service`, and `qdrant`.
+- **Amazon ECR**: Stores container images with automatic vulnerability scanning (scan-on-push).
+- **Application Load Balancer + Amazon CloudFront**: HTTP/GraphQL routing and CDN delivery for video.
+- **Amazon Route 53 + AWS Certificate Manager**: Custom domain and TLS certificates.
+- **Amazon RDS for PostgreSQL**: Relational database shared by both services.
+- **Amazon ElastiCache (Valkey)**: Sessions, BullMQ job queues, and caching.
+- **Amazon MQ (RabbitMQ)**: Asynchronous inter-service messaging.
+- **Amazon EFS**: Persistent storage for the Qdrant vector database.
+- **Amazon S3**: Stores raw uploads and transcoded MPEG-DASH artifacts.
+- **VPC Endpoints**: Let ECS tasks reach ECR/CloudWatch/SSM/Amazon MQ without a NAT Gateway.
+- **AWS Systems Manager Parameter Store**: Manages environment variables and secrets as SecureString parameters.
+- **AWS IAM (OIDC)**: GitHub Actions authenticates to AWS via a federated role, with no static access keys.
+- **Amazon CloudWatch + AWS Backup**: Centralized logging and automated EFS backups.
 
 ### Component Design
-- **Edge Devices**: Raspberry Pi collects and filters sensor data, sending it to IoT Core.
-- **Data Ingestion**: AWS IoT Core receives MQTT messages from the edge devices.
-- **Data Storage**: Raw data is stored in an S3 data lake; processed data is stored in another S3 bucket.
-- **Data Processing**: AWS Glue Crawlers catalog the data, and ETL jobs transform it for analysis.
-- **Web Interface**: AWS Amplify hosts a Next.js app for real-time dashboards and analytics.
-- **User Management**: Amazon Cognito manages user access, allowing up to 5 active accounts.
+- **api_service (NestJS + GraphQL)**: User authentication, video management, presigned upload URL generation, transcoding job enqueueing, GraphQL API, and a gRPC server for metadata.
+- **search_service (FastAPI)**: Consumes RabbitMQ messages, fetches metadata over gRPC, generates embeddings, upserts into Qdrant, and exposes a REST hybrid-search API.
+- **Qdrant**: Self-hosted vector database on Fargate storing video embeddings, with data persisted through an EFS mount.
+- **Transcoding worker**: A BullMQ worker inside `api_service` that downloads raw video from S3, runs FFmpeg to produce DASH output, and uploads the results back to S3.
 
 ### 4. Technical Implementation
 **Implementation Phases**
-This project has two parts—setting up weather edge stations and building the weather platform—each following 4 phases:
-- Build Theory and Draw Architecture: Research Raspberry Pi setup with ESP32 sensors and design the AWS serverless architecture (1 month pre-internship)
-- Calculate Price and Check Practicality: Use AWS Pricing Calculator to estimate costs and adjust if needed (Month 1).
-- Fix Architecture for Cost or Solution Fit: Tweak the design (e.g., optimize Lambda with Next.js) to stay cost-effective and usable (Month 2).
-- Develop, Test, and Deploy: Code the Raspberry Pi setup, AWS services with CDK/SDK, and Next.js app, then test and release to production (Months 2-3).
+The project has two parts — building the application (two services plus the database schema) and setting up the AWS infrastructure — each following 4 phases:
+- Research and Architecture Design: Study microservice patterns, gRPC, message queues, and vector search approaches suited to a video workload.
+- Cost Estimation and Feasibility Check: Estimate ECS Fargate/RDS/ElastiCache/Amazon MQ costs, and evaluate Fargate Spot and VPC Endpoints (instead of a NAT Gateway) as optimizations.
+- Architecture Refinement: Optimize the ALB health check (a dedicated `/health` endpoint, since Apollo GraphQL does not suit a default GET probe) and apply least-privilege security group rules.
+- Develop, Test, and Deploy: Implement both services, write tests, containerize with Docker, and set up CI/CD (GitHub Actions) to build and deploy to ECS automatically.
 
 **Technical Requirements**
-- Weather Edge Station: Sensors (temperature, humidity, rainfall, wind speed), a microcontroller (ESP32), and a Raspberry Pi as the edge device. Raspberry Pi runs Raspbian, handles Docker for filtering, and sends 1 MB/day per station via MQTT over Wi-Fi.
-- Weather Platform: Practical knowledge of AWS Amplify (hosting Next.js), Lambda (minimal use due to Next.js), AWS Glue (ETL), S3 (two buckets), IoT Core (gateway and rules), and Cognito (5 users). Use AWS CDK/SDK to code interactions (e.g., IoT Core rules to S3). Next.js reduces Lambda workload for the fullstack web app.
+- **api_service**: NestJS 11, Prisma ORM, GraphQL (Apollo), BullMQ, FFmpeg, AWS SDK (S3 presigned URLs), and a gRPC server/client.
+- **search_service**: Python FastAPI, gRPC, an embedding library (fastembed), the Qdrant client, and a RabbitMQ consumer/publisher.
+- **Infrastructure**: Multi-stage Docker builds for both services, ECS task definitions (Fargate), and GitHub Actions using an OIDC role to build/push to ECR and deploy to ECS without static AWS keys.
 
 ### 5. Timeline & Milestones
 **Project Timeline**
-- Pre-Internship (Month 0): 1 month for planning and old station review.
-- Internship (Months 1-3): 3 months.
-    - Month 1: Study AWS and upgrade hardware.
-    - Month 2: Design and adjust architecture.
-    - Month 3: Implement, test, and launch.
-- Post-Launch: Up to 1 year for research.
+- **15/06 – 21/06/2026 (Week 1)**: Design the microservice architecture and database schema; create the VPC, subnets, and security groups in the AWS Console.
+- **22/06 – 05/07/2026 (Weeks 2–3)**: Develop `api_service` (auth, video upload, GraphQL API) and scaffold `search_service` (FastAPI + gRPC).
+- **06/07 – 19/07/2026 (Weeks 4–5)**: Complete the asynchronous transcoding pipeline (BullMQ + FFmpeg), integrate RabbitMQ and Qdrant for semantic search, and set up the ECS cluster, ALB, CloudFront, and CI/CD.
+- **20/07 – 31/07/2026 (Weeks 6–6.5)**: Run end-to-end tests on staging, fix networking and health-check configuration issues, finalize documentation, and hand over.
 
 ### 6. Budget Estimation
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
+The estimate below is based on public AWS pricing for the **ap-southeast-1** region at the time of writing, reflecting the intended architecture (before AWS Free Tier credits; actual costs vary with traffic).
 
-### Infrastructure Costs
-- AWS Services:
-    - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-    - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-    - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-    - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-    - Amazon API Gateway: $0.01/month (2,000 requests).
-    - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-    - AWS Glue Crawlers: $0.07/month (1 crawler).
-    - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
+### Infrastructure Costs (estimated monthly)
+- Amazon ECS Fargate/Fargate Spot (3 tasks: api-service 2 vCPU/5GB, search-service 4 vCPU/9GB, qdrant 0.25 vCPU/2GB): ~$128.50
+- VPC Interface Endpoints (~8 endpoints, replacing a NAT Gateway): ~$58.40
+- Amazon MQ (mq.m7g.medium, single-instance): ~$56.00
+- Amazon ElastiCache for Valkey (2× cache.t4g.micro, one per service): ~$29.50
+- Amazon RDS for PostgreSQL (db.t3.micro, 20GB gp3): ~$17.30
+- Amazon CloudFront (CDN): ~$3.00
+- Amazon EFS + AWS Backup: ~$2.00
+- Amazon S3 (storage + requests): ~$1.00
+- Amazon Route 53 (2 hosted zones): ~$1.00
+- Amazon ECR + Amazon CloudWatch Logs: ~$1.70
+- AWS Certificate Manager, SSM Parameter Store, IAM/OIDC: free
 
-Total: $0.7/month, $8.40/12 months
+**Total**: ~$298/month, ~$450 for the full internship period (15/06–31/07/2026, ~6.5 weeks)
 
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+- **Hardware**: none — the entire system runs fully in the cloud.
+
+> Note: VPC Interface Endpoints (used instead of a NAT Gateway to avoid depending on internet egress) account for a significant share of the cost, close to a single NAT Gateway. This is a network-isolation-versus-cost trade-off worth revisiting during later optimization.
 
 ### 7. Risk Assessment
 #### Risk Matrix
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
+- Synchronization failures between the two services over gRPC/RabbitMQ: High impact, medium probability.
+- Video transcoding consuming excessive compute/cost for large files: Medium impact, medium probability.
+- RDS/ElastiCache running single-AZ (no Multi-AZ): High impact if an AZ is lost, low probability.
+- Exceeding the personal budget during the internship: Medium impact, medium probability.
 
 #### Mitigation Strategies
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
+- Inter-service sync: Use a dead-letter queue for RabbitMQ, bounded retries, and correlation IDs in logs for debugging.
+- Transcoding cost: Cap upload file size and limit output quality variants to the source resolution.
+- Availability: Consider enabling Multi-AZ for RDS if the budget allows after reviewing actual costs.
+- Budget: Enable AWS Budget alerts and prefer Fargate Spot for tasks that tolerate brief interruptions.
 
 #### Contingency Plans
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+- Automatic rollback via the ECS deployment circuit breaker when a new deployment fails health checks.
+- Retain the previous task definition revision for manual rollback if needed.
 
 ### 8. Expected Outcomes
-#### Technical Improvements: 
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
+#### Technical Improvements
+A complete video streaming system with semantic search, asynchronous transcoding, and automated CI/CD — rather than a single-purpose serverless demo.
 #### Long-term Value
-1-year data foundation for AI research.  
-Reusable for future projects.
+A reusable foundation of microservice architecture and AWS production operations skills for future projects, plus a technical portfolio piece demonstrating real system design capability.

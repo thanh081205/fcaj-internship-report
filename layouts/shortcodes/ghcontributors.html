@@ -4,7 +4,6 @@
     flex-flow: wrap;
     align-content: flex-start;
   }
-
   .ghContributors > div {
     width: 50%;
     display: inline-flex;
@@ -19,22 +18,33 @@
   }
 </style>
 <div class="ghContributors">
-  {{ $url := .Get 0 }} {{ range getJSON $url }}
-  <div>
-    <img
-      src="{{.avatar_url}}"
-      class="inline"
-      width="32"
-      height="32"
-      style="
-        height: 32px;
-        height: 32px;
-        margin-bottom: 0.25em;
-        vertical-align: middle;
-      "
-    />
-    <label><a href="{{.html_url}}">@{{.login}}</a></label>
-    <span class="contributions">{{.contributions}} commits</span>
-  </div>
+  {{ $url := .Get 0 }}
+  {{ $resource := resources.GetRemote $url }}
+  {{ with $resource }}
+    {{ with .Err }}
+      {{ errorf "Không tải được %s: %s" $url . }}
+    {{ else }}
+      {{ $data := .Content | transform.Unmarshal }}
+      {{ range $data }}
+      <div>
+        <img
+          src="{{ .avatar_url }}"
+          class="inline"
+          width="32"
+          height="32"
+          style="
+            height: 32px;
+            height: 32px;
+            margin-bottom: 0.25em;
+            vertical-align: middle;
+          "
+        />
+        <label><a href="{{ .html_url }}">@{{ .login }}</a></label>
+        <span class="contributions">{{ .contributions }} commits</span>
+      </div>
+      {{ end }}
+    {{ end }}
+  {{ else }}
+    {{ errorf "Không lấy được resource từ %s" $url }}
   {{ end }}
 </div>

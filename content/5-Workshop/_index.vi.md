@@ -6,28 +6,31 @@ chapter: false
 pre: " <b> 5. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-
-# Đảm bảo truy cập Hybrid an toàn đến S3 bằng cách sử dụng VPC endpoint
+# Triển khai hệ thống lên AWS ECS Fargate
 
 #### Tổng quan
 
-**AWS PrivateLink** cung cấp kết nối riêng tư đến các dịch vụ aws từ VPCs hoặc trung tâm dữ liệu (on-premise) mà không làm lộ lưu lượng truy cập ra ngoài public internet.
+Hệ thống server gồm hai service độc lập: `api_service` (NestJS + Apollo GraphQL) đảm nhận xác thực, quản lý video và transcode bất đồng bộ; `search_service` (Python FastAPI) đảm nhận tìm kiếm lai, kết hợp điểm từ khóa với độ tương đồng vector ngữ nghĩa thông qua Qdrant. Hai service giao tiếp với nhau qua gRPC song hướng và đồng bộ metadata bất đồng bộ qua RabbitMQ.
 
-Trong bài lab này, chúng ta sẽ học cách tạo, cấu hình, và kiểm tra VPC endpoints để cho phép workload của bạn tiếp cận các dịch vụ AWS mà không cần đi qua Internet công cộng.
+Trong workshop này, chúng ta sẽ triển khai toàn bộ hệ thống đó lên AWS. Đây không phải một demo đơn service, mà đi qua đúng những bài toán gặp trong hệ thống production thật: chạy container trên **ECS Fargate**, kết nối chúng tới các dịch vụ dữ liệu được quản lý bên trong VPC riêng tư, xử lý job bất đồng bộ và giao tiếp liên service, đưa nền tảng ra Internet an toàn qua CDN, và tự động hóa việc deploy bằng CI/CD.
 
-Chúng ta sẽ tạo hai loại endpoints để truy cập đến Amazon S3: gateway vpc endpoint và interface vpc endpoint. Hai loại vpc endpoints này mang đến nhiều lợi ích tùy thuộc vào việc bạn truy cập đến S3 từ môi trường cloud hay từ trung tâm dữ liệu (on-premise).
-+ **Gateway** - Tạo gateway endpoint để gửi lưu lượng đến Amazon S3 hoặc DynamoDB using private IP addresses. Bạn điều hướng lưu lượng từ VPC của bạn đến gateway endpoint bằng các bảng định tuyến (route tables)
-+ **Interface** - Tạo interface endpoint để gửi lưu lượng đến các dịch vụ điểm cuối (endpoints) sử dụng Network Load Balancer để phân phối lưu lượng. Lưu lượng dành cho dịch vụ điểm cuối được resolved bằng DNS.
+Một quyết định thiết kế xuyên suốt workshop là **toàn bộ compute chạy trong private subnet mà không dùng NAT Gateway**. Thay vào đó, ECS task truy cập các dịch vụ AWS thông qua **VPC Endpoints**, giúp lưu lượng không đi ra Internet công cộng.
+
+#### Những gì chúng ta sẽ xây dựng
+
++ Một **VPC** với public/private subnet, security group, và VPC Endpoint, CloudWatch Logs, Systems Manager, Amazon MQ.
++ Tầng dữ liệu được quản lý: **Amazon RDS for PostgreSQL**, **Amazon ElastiCache for Valkey**, **Amazon S3** và **Amazon EFS**.
++ Ba service trên **Amazon ECS Fargate**: `api-service`, `search-service`, và **Qdrant** vector database tự host với dữ liệu lưu bền vững trên EFS.
++ Đường truy cập công khai qua **Application Load Balancer** và **Amazon CloudFront**, kèm domain riêng (Route 53) và chứng chỉ TLS (AWS Certificate Manager).
++ Một **pipeline CI/CD** tự động dùng GitHub Actions với IAM OIDC federated role, không lưu bất kỳ AWS access key tĩnh nào.
 
 #### Nội dung
 
-1. [Tổng quan về workshop](5.1-Workshop-overview/)
-2. [Chuẩn bị](5.2-Prerequiste/)
-3. [Truy cập đến S3 từ VPC](5.3-S3-vpc/)
-4. [Truy cập đến S3 từ TTDL On-premises](5.4-S3-onprem/)
-5. [VPC Endpoint Policies (làm thêm)](5.5-Policy/)
-6. [Dọn dẹp tài nguyên](5.6-Cleanup/)
+1. [Giới thiệu](5.1-Workshop-overview/)
+2. [Chuẩn bị](5.2-Prerequisites/)
+3. [Xây dựng nền tảng mạng](5.3-Network/)
+4. [Tầng dữ liệu](5.4-Data-layer/)
+5. [Triển khai service lên ECS Fargate](5.5-ECS-deployment/)
+6. [Đưa hệ thống ra Internet với ALB và CloudFront](5.6-Public-access/)
+7. [CI/CD với GitHub Actions](5.7-CICD/)
+8. [Dọn dẹp tài nguyên](5.8-Cleanup/)
