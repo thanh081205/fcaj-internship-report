@@ -1,0 +1,595 @@
+<!doctype html><html lang=vi class="js csstransforms3d"><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.134.3"><meta name=description content><meta name=author content="thienlh@thienlu.com"><link rel=icon href=/fcaj-internship-report/images/favicon.png type=image/png><title>Triển khai service lên ECS Fargate :: Báo cáo thực tập</title>
+<link href=/fcaj-internship-report/css/nucleus.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/fontawesome-all.min.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/hybrid.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/featherlight.min.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/perfect-scrollbar.min.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/auto-complete.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/atom-one-dark-reasonable.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/theme.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/hugo-theme.css?1785505474 rel=stylesheet><link href=/fcaj-internship-report/css/theme-workshop.css?1785505474 rel=stylesheet><script src=/fcaj-internship-report/js/jquery-3.3.1.min.js?1785505474></script><style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/fcaj-internship-report/vi/5-workshop/5.5-ecs-deployment/><nav id=sidebar class=showVisitedLinks><div id=header-wrapper><div id=header><a id=logo href=/><svg id="Layer_1" data-name="Layer 1" viewBox="0 0 60 30" width="30%"><defs><style>.cls-1{fill:#fff}.cls-2{fill:#fff;fill-rule:evenodd}</style></defs><title>AWS-Logo_White-Color</title><path class="cls-1" d="M14.09 10.85a4.7 4.7.0 00.19 1.48 7.73 7.73.0 00.54 1.19.77.77.0 01.12.38.64.64.0 01-.32.49l-1 .7a.83.83.0 01-.44.15.69.69.0 01-.49-.23 3.8 3.8.0 01-.6-.77q-.25-.42-.51-1a6.14 6.14.0 01-4.89 2.3 4.54 4.54.0 01-3.32-1.19 4.27 4.27.0 01-1.22-3.2 4.28 4.28.0 011.46-3.4A6.06 6.06.0 017.69 6.46a12.47 12.47.0 011.76.13q.92.13 1.91.36V5.73a3.65 3.65.0 00-.79-2.66A3.81 3.81.0 007.86 2.3a7.71 7.71.0 00-1.79.22 12.78 12.78.0 00-1.79.57 4.55 4.55.0 01-.58.22h-.26q-.35.0-.35-.52V2a1.09 1.09.0 01.12-.58 1.2 1.2.0 01.47-.35A10.88 10.88.0 015.77.32 10.19 10.19.0 018.36.0a6 6 0 014.35 1.35 5.49 5.49.0 011.38 4.09zM7.34 13.38a5.36 5.36.0 001.72-.31A3.63 3.63.0 0010.63 12 2.62 2.62.0 0011.19 11a5.63 5.63.0 00.16-1.44v-.7a14.35 14.35.0 00-1.53-.28 12.37 12.37.0 00-1.56-.1 3.84 3.84.0 00-2.47.67A2.34 2.34.0 005 11a2.35 2.35.0 00.61 1.76A2.4 2.4.0 007.34 13.38zm13.35 1.8a1 1 0 01-.64-.16 1.3 1.3.0 01-.35-.65L15.81 1.51a3 3 0 01-.15-.67.36.36.0 01.41-.41H17.7a1 1 0 01.65.16 1.4 1.4.0 01.33.65l2.79 11 2.59-11A1.17 1.17.0 0124.39.6a1.1 1.1.0 01.67-.16H26.4a1.1 1.1.0 01.67.16 1.17 1.17.0 01.32.65L30 12.39 32.88 1.25A1.39 1.39.0 0133.22.6a1 1 0 01.65-.16h1.54a.36.36.0 01.41.41 1.36 1.36.0 010 .26 3.64 3.64.0 01-.12.41l-4 12.86a1.3 1.3.0 01-.35.65 1 1 0 01-.64.16H29.25a1 1 0 01-.67-.17 1.26 1.26.0 01-.32-.67L25.67 3.64l-2.56 10.7a1.26 1.26.0 01-.32.67 1 1 0 01-.67.17zm21.36.44a11.28 11.28.0 01-2.56-.29 7.44 7.44.0 01-1.92-.67 1 1 0 01-.61-.93v-.84q0-.52.38-.52a.9.9.0 01.31.06l.42.17a8.77 8.77.0 001.83.58 9.78 9.78.0 002 .2 4.48 4.48.0 002.43-.55 1.76 1.76.0 00.86-1.57 1.61 1.61.0 00-.45-1.16A4.29 4.29.0 0043 9.22l-2.41-.76A5.15 5.15.0 0138 6.78a3.94 3.94.0 01-.83-2.41 3.7 3.7.0 01.45-1.85 4.47 4.47.0 011.19-1.37 5.27 5.27.0 011.7-.86A7.4 7.4.0 0142.6.0a8.87 8.87.0 011.12.07q.57.07 1.08.19t.95.26a4.27 4.27.0 01.7.29 1.59 1.59.0 01.49.41.94.94.0 01.15.55v.79q0 .52-.38.52a1.76 1.76.0 01-.64-.2 7.74 7.74.0 00-3.2-.64 4.37 4.37.0 00-2.21.47 1.6 1.6.0 00-.79 1.48 1.58 1.58.0 00.49 1.18 4.94 4.94.0 001.83.92L44.55 7a5.08 5.08.0 012.57 1.6A3.76 3.76.0 0147.9 11a4.21 4.21.0 01-.44 1.93 4.4 4.4.0 01-1.21 1.47 5.43 5.43.0 01-1.85.93A8.25 8.25.0 0142.05 15.62z"/><path class="cls-2" d="M45.19 23.81C39.72 27.85 31.78 30 25 30A36.64 36.64.0 01.22 20.57c-.51-.46-.06-1.09.56-.74A49.78 49.78.0 0025.53 26.4 49.23 49.23.0 0044.4 22.53C45.32 22.14 46.1 23.14 45.19 23.81z"/><path class="cls-2" d="M47.47 21.21c-.7-.9-4.63-.42-6.39-.21-.53.06-.62-.4-.14-.74 3.13-2.2 8.27-1.57 8.86-.83s-.16 5.89-3.09 8.35c-.45.38-.88.18-.68-.32C46.69 25.8 48.17 22.11 47.47 21.21z"/></svg></a></div><div class=searchbox><label for=search-by><i class="fas fa-search"></i></label>
+<input data-search-input id=search-by type=search placeholder=Search...>
+<span data-search-clear><i class="fas fa-times"></i></span></div><script type=text/javascript src=/fcaj-internship-report/js/lunr.min.js?1785505474></script><script type=text/javascript src=/fcaj-internship-report/js/auto-complete.js?1785505474></script><script type=text/javascript>var baseurl="https://thanh081205.github.io/fcaj-internship-report//vi"</script><script type=text/javascript src=/fcaj-internship-report/js/search.js?1785505474></script></div><div class=highlightable><ul class=topics><li data-nav-id=/fcaj-internship-report/vi/1-worklog/ title="Nhật ký công việc" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/><b>1. </b>Nhật ký công việc
+<i class="fas fa-check read-icon"></i></a><ul><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.1-week1/ title="Worklog Tuần 1" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.1-week1/><b>1.1. </b>Worklog Tuần 1
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.2-week2/ title="Worklog Tuần 2" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.2-week2/><b>1.2. </b>Worklog Tuần 2
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.3-week3/ title="Worklog Tuần 3" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.3-week3/><b>1.3. </b>Worklog Tuần 3
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.4-week4/ title="Worklog Tuần 4" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.4-week4/><b>1.4. </b>Worklog Tuần 4
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.5-week5/ title="Worklog Tuần 5" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.5-week5/><b>1.5. </b>Worklog Tuần 5
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.6-week6/ title="Worklog Tuần 6" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.6-week6/><b>1.6. </b>Worklog Tuần 6
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.7-week7/ title="Worklog Tuần 7" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.7-week7/><b>1.7. </b>Worklog Tuần 7
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/1-worklog/1.8-week8/ title="Worklog Tuần 8" class=dd-item><a href=/fcaj-internship-report/vi/1-worklog/1.8-week8/><b>1.8. </b>Worklog Tuần 8
+<i class="fas fa-check read-icon"></i></a></li></ul></li><li data-nav-id=/fcaj-internship-report/vi/2-proposal/ title="Bản đề xuất" class=dd-item><a href=/fcaj-internship-report/vi/2-proposal/><b>2. </b>Bản đề xuất
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/3-blogsposted/ title="Các bài blogs đã đăng" class=dd-item><a href=/fcaj-internship-report/vi/3-blogsposted/><b>3. </b>Các bài blogs đã đăng
+<i class="fas fa-check read-icon"></i></a><ul><li data-nav-id=/fcaj-internship-report/vi/3-blogsposted/3.1-blog1/ title="Blog 1" class=dd-item><a href=/fcaj-internship-report/vi/3-blogsposted/3.1-blog1/><b>3.1. </b>Blog 1
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/3-blogsposted/3.2-blog2/ title="Blog 2" class=dd-item><a href=/fcaj-internship-report/vi/3-blogsposted/3.2-blog2/><b>3.2. </b>Blog 2
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/3-blogsposted/3.3-blog3/ title="Blog 3" class=dd-item><a href=/fcaj-internship-report/vi/3-blogsposted/3.3-blog3/><b>3.3. </b>Blog 3
+<i class="fas fa-check read-icon"></i></a></li></ul></li><li data-nav-id=/fcaj-internship-report/vi/4-eventparticipated/ title="Các events đã tham gia" class=dd-item><a href=/fcaj-internship-report/vi/4-eventparticipated/><b>4. </b>Các events đã tham gia
+<i class="fas fa-check read-icon"></i></a><ul><li data-nav-id=/fcaj-internship-report/vi/4-eventparticipated/4.1-event1/ title="Event 1" class=dd-item><a href=/fcaj-internship-report/vi/4-eventparticipated/4.1-event1/><b>4.1. </b>Event 1
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/4-eventparticipated/4.2-event2/ title="Event 2" class=dd-item><a href=/fcaj-internship-report/vi/4-eventparticipated/4.2-event2/><b>4.2. </b>Event 2
+<i class="fas fa-check read-icon"></i></a></li></ul></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/ title=Workshop class="dd-item
+parent"><a href=/fcaj-internship-report/vi/5-workshop/><b>5. </b>Workshop
+<i class="fas fa-check read-icon"></i></a><ul><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.1-workshop-overview/ title="Giới thiệu" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.1-workshop-overview/><b>5.1. </b>Giới thiệu
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.2-prerequisites/ title="Các bước chuẩn bị" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.2-prerequisites/><b>5.2. </b>Các bước chuẩn bị
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.3-network/ title="Xây dựng nền tảng mạng" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.3-network/><b>5.3. </b>Xây dựng nền tảng mạng
+<i class="fas fa-check read-icon"></i></a><ul><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.1-create-vpc/ title="Tạo VPC, subnet và định tuyến" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.1-create-vpc/><b>5.3.1 </b>Tạo VPC, subnet và định tuyến
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.2-security-groups/ title="Tạo các security group" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.2-security-groups/><b>5.3.2 </b>Tạo các security group
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.3-vpc-endpoints/ title="Tạo VPC Endpoint" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.3-vpc-endpoints/><b>5.3.3 </b>Tạo VPC Endpoint
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.4-dns-cdn/ title="DNS và tầng edge CloudFront" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.3-network/5.3.4-dns-cdn/><b>5.3.4 </b>DNS và tầng edge CloudFront
+<i class="fas fa-check read-icon"></i></a></li></ul></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.4-data-layer/ title="Tầng dữ liệu" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.4-data-layer/><b>5.4. </b>Tầng dữ liệu
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.5-ecs-deployment/ title="Triển khai service lên ECS Fargate" class="dd-item
+active"><a href=/fcaj-internship-report/vi/5-workshop/5.5-ecs-deployment/><b>5.5. </b>Triển khai service lên ECS Fargate
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.6-public-access/ title="Đưa hệ thống ra Internet với ALB và CloudFront" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.6-public-access/><b>5.6. </b>Đưa hệ thống ra Internet với ALB và CloudFront
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.7-cicd/ title="CI/CD với GitHub Actions" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.7-cicd/><b>5.7. </b>CI/CD với GitHub Actions
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/5-workshop/5.8-cleanup/ title="Dọn dẹp tài nguyên" class=dd-item><a href=/fcaj-internship-report/vi/5-workshop/5.8-cleanup/><b>5.8. </b>Dọn dẹp tài nguyên
+<i class="fas fa-check read-icon"></i></a></li></ul></li><li data-nav-id=/fcaj-internship-report/vi/6-self-evaluation/ title="Tự đánh giá" class=dd-item><a href=/fcaj-internship-report/vi/6-self-evaluation/><b>6. </b>Tự đánh giá
+<i class="fas fa-check read-icon"></i></a></li><li data-nav-id=/fcaj-internship-report/vi/7-feedback/ title="Chia sẻ, đóng góp ý kiến" class=dd-item><a href=/fcaj-internship-report/vi/7-feedback/><b>7. </b>Chia sẻ, đóng góp ý kiến
+<i class="fas fa-check read-icon"></i></a></li></ul><section id=shortcuts><h3>More</h3><ul><li><a class=padding href=http://awsstudygroup.com><i class='fab fa-aws'></i> AWS Study Group - Blog</a></li><li><a class=padding href=https://www.facebook.com/groups/awsstudygroupfcj><i class='fab fa-facebook'></i> AWS Study Group - Nhóm FB</a></li></ul></section><section id=prefooter><hr><ul><li><a class=padding><i class="fas fa-language fa-fw"></i><div class=select-style><select id=select-language onchange="location=this.value"><option id=en value=https://thanh081205.github.io/fcaj-internship-report/5-workshop/5.5-ecs-deployment/>English</option><option id=vi value=https://thanh081205.github.io/fcaj-internship-report/vi/5-workshop/5.5-ecs-deployment/ selected>Tiếng Việt</option></select><svg id="Capa_1" xmlns:xlink="http://www.w3.org/1999/xlink" width="255" height="255" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255"><g><g id="arrow-drop-down"><polygon points="0,63.75 127.5,191.25 255,63.75"/></g></g></svg></div></a></li><li><a class=padding href=# data-clear-history-toggle><i class="fas fa-history fa-fw"></i> Clear History</a></li></ul></section><section id=footer><left><br><br><b>Last Updated</b><br><i><font color=orange>31-07-2026</font>
+</i></left><left><br><br><b>Team</b><br><i><a href=https://www.facebook.com/groups/660548818043427 style=color:orange>First Cloud AI Journey</a>
+</i></left><script async defer src=https://buttons.github.io/buttons.js></script></section></div></nav><section id=body><div id=overlay></div><div class="padding highlightable"><div><div id=top-bar><div id=breadcrumbs itemscope itemtype=http://data-vocabulary.org/Breadcrumb><span id=sidebar-toggle-span><a href=# id=sidebar-toggle data-sidebar-toggle><i class="fas fa-bars"></i>
+</a></span><span id=toc-menu><i class="fas fa-list-alt"></i></span>
+<span class=links><a href=/fcaj-internship-report/vi/>Báo cáo thực tập</a> > <a href=/fcaj-internship-report/vi/5-workshop/>Workshop</a> > Triển khai service lên ECS Fargate</span></div><div class=progress><div class=wrapper><nav id=TableOfContents><ul><li><ul><li></li></ul></li></ul></nav></div></div></div></div><div id=head-tags></div><div id=body-inner><h1>Triển khai service lên ECS Fargate</h1><p>Đây là phần mà hệ thống thực sự bắt đầu chạy. Ba service được đưa lên Fargate, chúng tìm thấy nhau qua service discovery, và kết nối tới tầng dữ liệu đã dựng ở mục 5.4.</p><table><thead><tr><th style=text-align:left>Service</th><th style=text-align:left>Port container</th><th style=text-align:left>CPU / bộ nhớ</th></tr></thead><tbody><tr><td style=text-align:left><code>qdrant</code></td><td style=text-align:left>6333 HTTP, 6334 gRPC</td><td style=text-align:left>0.25 vCPU / 2 GB</td></tr><tr><td style=text-align:left><code>search-service</code></td><td style=text-align:left>8000 HTTP, 50052 gRPC</td><td style=text-align:left>4 vCPU / 9 GB</td></tr><tr><td style=text-align:left><code>api-service</code></td><td style=text-align:left>8080 HTTP, 50051 gRPC</td><td style=text-align:left>2 vCPU / 5 GB</td></tr></tbody></table><p><code>search-service</code> được cấp nhiều tài nguyên nhất vì nó chạy mô hình embedding ngay trong tiến trình — <code>fastembed</code> nạp mô hình vào bộ nhớ và ngốn CPU trong lúc sinh vector. <code>api-service</code> cần dư địa cho việc transcode bằng FFmpeg. Qdrant khá nhẹ ở quy mô dữ liệu này.</p><p><strong>Thứ tự dựng ở đây có ý nghĩa.</strong> Qdrant phải chạy trước khi <code>search-service</code> khởi động, vì <code>search-service</code> kết nối tới nó ngay trong quá trình start. Hãy tạo các service theo đúng thứ tự trên trang này.</p><h4 id=tạo-ecr-repository>Tạo ECR repository</h4><p>Console <strong>ECR</strong> → <strong>Create repository</strong>, làm ba lần:</p><table><thead><tr><th style=text-align:left>Tên repository</th><th style=text-align:left>Thiết lập</th></tr></thead><tbody><tr><td style=text-align:left><code>video-platform/api-service</code></td><td style=text-align:left>Private, bật scan on push</td></tr><tr><td style=text-align:left><code>video-platform/search-service</code></td><td style=text-align:left>Private, bật scan on push</td></tr><tr><td style=text-align:left><code>video-platform/qdrant</code></td><td style=text-align:left>Private, bật scan on push</td></tr></tbody></table><p><strong>Scan on push</strong> chạy quét lỗ hổng cho mọi image bạn đẩy lên, hoàn toàn không tính thêm phí. Không có lý do gì để tắt nó.</p><p><img alt="ecr repo" src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/ecr-repo.png></p><p>Các imgae sau khi được build bởi Github Action sẽ được lưu trữ tại đây.</p><p><img alt="image trên ecr" src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/ecr-images.png></p><p>Tag <code>:latest</code> chấp nhận được cho lần deploy thủ công đầu tiên này. Mục 5.7 sẽ chuyển sang tag theo commit SHA, đó mới là cách làm đúng cho mọi thứ cần lặp lại được — <code>:latest</code> khiến bạn không thể biết task đang chạy đến từ bản build nào, và việc rollback trở thành đoán mò.</p><h4 id=tạo-các-iam-role>Tạo các IAM role</h4><p>ECS dùng hai role riêng biệt, và nhầm lẫn giữa chúng là nguồn gây rối rất phổ biến.</p><p><strong>Task execution role</strong> được ECS agent dùng <em>trước khi</em> container của bạn khởi động — để kéo image, đọc tham số SSM và tạo log stream. <strong>Task role</strong> được chính mã ứng dụng dùng <em>trong lúc chạy</em> — ví dụ để gọi S3.</p><p>Tạo <code>ecsTaskExecutionRole</code>: <strong>IAM</strong> → <strong>Roles</strong> → <strong>Create role</strong> → <strong>AWS service</strong> → <strong>Elastic Container Service Task</strong>. Gắn managed policy <code>AmazonECSTaskExecutionRolePolicy</code>, sau đó thêm một inline policy cho Parameter Store:</p><pre tabindex=0><code>{
+	&#34;Version&#34;: &#34;2012-10-17&#34;,
+	&#34;Statement&#34;: [
+		{
+			&#34;Sid&#34;: &#34;SSMParameterReadAccess&#34;,
+			&#34;Effect&#34;: &#34;Allow&#34;,
+			&#34;Action&#34;: [
+				&#34;ssm:GetParameters&#34;,
+				&#34;ssm:GetParameter&#34;,
+				&#34;ssm:GetParametersByPath&#34;
+			],
+			&#34;Resource&#34;: &#34;arn:aws:ssm:xxxxxxxxxx:parameter/vsp/*&#34;
+		},
+		{
+			&#34;Sid&#34;: &#34;KMSKMSDecryptAccess&#34;,
+			&#34;Effect&#34;: &#34;Allow&#34;,
+			&#34;Action&#34;: [
+				&#34;kms:Decrypt&#34;
+			],
+			&#34;Resource&#34;: &#34;arn:aws:kms:xxxxxxxxxxxxxxxxxxxxx&#34;
+		},
+		{
+			&#34;Effect&#34;: &#34;Allow&#34;,
+			&#34;Action&#34;: [
+				&#34;logs:CreateLogGroup&#34;
+			],
+			&#34;Resource&#34;: &#34;arn:aws:xxxxxxxxxxxxxxxxxx:log-group:/ecs/*&#34;
+		}
+	]
+}
+</code></pre><p>Khóa KMS ở đây là khóa mặc định <code>aws/ssm</code> của tài khoản, trừ khi bạn tự tạo khóa riêng; tìm ID của nó ở <strong>KMS</strong> → <strong>AWS managed keys</strong>.</p><p>Tiếp theo tạo <code>vspTaskRole</code> với cùng trust policy, và cấp cho nó những quyền mà bản thân ứng dụng cần:</p><pre tabindex=0><code>{
+	&#34;Version&#34;: &#34;2012-10-17&#34;,
+	&#34;Statement&#34;: [
+		{
+			&#34;Effect&#34;: &#34;Allow&#34;,
+			&#34;Action&#34;: [
+				&#34;ssmmessages:CreateControlChannel&#34;,
+				&#34;ssmmessages:CreateDataChannel&#34;,
+				&#34;ssmmessages:OpenControlChannel&#34;,
+				&#34;ssmmessages:OpenDataChannel&#34;
+			],
+			&#34;Resource&#34;: &#34;*&#34;
+		}
+	]
+}
+</code></pre><p>Khối <code>ssmmessages</code> bật tính năng ECS Exec, cho phép bạn mở shell bên trong một task đang chạy. Trên private subnet không có bastion host, đó là cách duy nhất để gỡ lỗi container một cách tương tác — và nên chuẩn bị sẵn trước khi có sự cố, thay vì lúc đã xảy ra rồi mới quay lại thêm.</p><h4 id=tạo-namespace-cho-service-discovery>Tạo namespace cho service discovery</h4><p>Ba service cần tìm thấy nhau theo tên. IP của task Fargate thay đổi sau mỗi lần deploy, nên ghi cứng địa chỉ là không khả thi.</p><p><strong>AWS Cloud Map</strong> → <strong>Create namespace</strong>:</p><table><thead><tr><th style=text-align:left>Mục</th><th style=text-align:left>Giá trị</th></tr></thead><tbody><tr><td style=text-align:left>Namespace name</td><td style=text-align:left><code>vsp.internal</code></td></tr><tr><td style=text-align:left>Instance discovery</td><td style=text-align:left>API calls and DNS queries in VPCs</td></tr><tr><td style=text-align:left>VPC</td><td style=text-align:left>VPC đã tạo ở 5.3.1</td></tr></tbody></table><p><img alt="name space" src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/namespace.png></p><p>Thao tác này tạo ra một Route 53 private hosted zone gắn vào VPC. Khi một ECS service đăng ký vào đó, mỗi task nhận một bản ghi <code>A</code>, nhờ vậy <code>api.vsp.internal</code> phân giải tới đúng IP hiện hành của task từ bất kỳ đâu bên trong VPC. Đây chính là thứ khiến các tham số <code>GRPC_SEARCH_URL</code> và <code>QDRANT_URL</code> ở mục 5.4 hoạt động được.</p><h4 id=tạo-cluster-và-log-group>Tạo cluster và log group</h4><p>Console <strong>ECS</strong> → <strong>Clusters</strong> → <strong>Create cluster</strong>:</p><table><thead><tr><th style=text-align:left>Mục</th><th style=text-align:left>Giá trị</th></tr></thead><tbody><tr><td style=text-align:left>Cluster name</td><td style=text-align:left><code>vsp-ecs-cluster</code></td></tr><tr><td style=text-align:left>Infrastructure</td><td style=text-align:left>AWS Fargate (serverless)</td></tr><tr><td style=text-align:left>Container Insights</td><td style=text-align:left>Enabled</td></tr></tbody></table><p>Sau đó tạo ba CloudWatch log group — <strong>CloudWatch</strong> → <strong>Log groups</strong> → <strong>Create</strong>:</p><pre tabindex=0><code>/ecs/vsp-api-service
+/ecs/vsp-search-service
+/ecs/vsp-qdrant
+</code></pre><p><img alt=cluster src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/cluster.png></p><h4 id=task-definition-1--qdrant>Task definition 1 — Qdrant</h4><p><strong>Task definitions</strong> → <strong>Create new task definition</strong> → <strong>JSON</strong>:</p><pre tabindex=0><code>{
+  &#34;taskDefinitionArn&#34;: &#34;arn:aws:ecs:ap-southeast-1:{account-id}:task-definition/vsp-qdrant:2&#34;,
+  &#34;containerDefinitions&#34;: [
+    {
+      &#34;name&#34;: &#34;qdrant-container&#34;,
+      &#34;image&#34;: {image_uri},
+      &#34;cpu&#34;: 0,
+      &#34;portMappings&#34;: [
+        {
+          &#34;containerPort&#34;: 6333,
+          &#34;hostPort&#34;: 6333,
+          &#34;protocol&#34;: &#34;tcp&#34;,
+          &#34;name&#34;: &#34;qdrant-container-6333-tcp&#34;,
+          &#34;appProtocol&#34;: &#34;http&#34;
+        },
+        {
+          &#34;containerPort&#34;: 6334,
+          &#34;hostPort&#34;: 6334,
+          &#34;protocol&#34;: &#34;tcp&#34;,
+          &#34;name&#34;: &#34;qdrant-container-6334-tcp&#34;,
+          &#34;appProtocol&#34;: &#34;grpc&#34;
+        }
+      ],
+      &#34;essential&#34;: true,
+      &#34;environment&#34;: [],
+      &#34;environmentFiles&#34;: [],
+      &#34;mountPoints&#34;: [],
+      &#34;volumesFrom&#34;: [],
+      &#34;ulimits&#34;: [],
+      &#34;logConfiguration&#34;: {
+        &#34;logDriver&#34;: &#34;awslogs&#34;,
+        &#34;options&#34;: {
+          &#34;awslogs-group&#34;: &#34;/ecs/vsp-qdrant&#34;,
+          &#34;awslogs-create-group&#34;: &#34;true&#34;,
+          &#34;awslogs-region&#34;: &#34;ap-southeast-1&#34;,
+          &#34;awslogs-stream-prefix&#34;: &#34;ecs&#34;
+        },
+        &#34;secretOptions&#34;: []
+      },
+      &#34;systemControls&#34;: []
+    }
+  ],
+  &#34;family&#34;: &#34;vsp-qdrant&#34;,
+  &#34;taskRoleArn&#34;: &#34;arn:aws:iam::{account-id}:role/ecsTaskExecutionRole&#34;,
+  &#34;executionRoleArn&#34;: &#34;arn:aws:iam::{account-id}:role/ecsTaskExecutionRole&#34;,
+  &#34;networkMode&#34;: &#34;awsvpc&#34;,
+  &#34;revision&#34;: 2,
+  &#34;volumes&#34;: [
+    {
+      &#34;name&#34;: &#34;qdrant-volume&#34;,
+      &#34;efsVolumeConfiguration&#34;: {
+        &#34;fileSystemId&#34;: &#34;{efs-id}&#34;,
+        &#34;rootDirectory&#34;: &#34;/&#34;
+      }
+    }
+  ],
+  &#34;status&#34;: &#34;ACTIVE&#34;,
+  &#34;requiresAttributes&#34;: [
+    {
+      &#34;name&#34;: &#34;ecs.capability.execution-role-awslogs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.ecr-auth&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.21&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.task-iam-role&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.execution-role-ecr-pull&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.18&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.task-eni&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.29&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.logging-driver.awslogs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.efsAuth&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.19&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.efs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.25&#34;
+    }
+  ],
+  &#34;placementConstraints&#34;: [],
+  &#34;compatibilities&#34;: [
+    &#34;EC2&#34;,
+    &#34;FARGATE&#34;,
+    &#34;MANAGED_INSTANCES&#34;
+  ],
+  &#34;runtimePlatform&#34;: {
+    &#34;cpuArchitecture&#34;: &#34;X86_64&#34;,
+    &#34;operatingSystemFamily&#34;: &#34;LINUX&#34;
+  },
+  &#34;requiresCompatibilities&#34;: [
+    &#34;FARGATE&#34;
+  ],
+  &#34;cpu&#34;: &#34;256&#34;,
+  &#34;memory&#34;: &#34;2048&#34;,
+  &#34;registeredAt&#34;: &#34;2026-07-28T10:54:31.814Z&#34;,
+  &#34;registeredBy&#34;: &#34;arn:aws:iam::{account-id}:root&#34;,
+  &#34;enableFaultInjection&#34;: false,
+  &#34;tags&#34;: [
+    {
+      &#34;key&#34;: &#34;Project&#34;,
+      &#34;value&#34;: &#34;Video-Streaming-Platform&#34;
+    }
+  ]
+}
+</code></pre><p>Hãy ghim image Qdrant vào một phiên bản cụ thể thay vì dùng <code>:latest</code>. Một vector database tự nâng cấp lặng lẽ trong lúc redeploy có thể đổi định dạng chỉ mục ngay dưới chân bạn.</p><h4 id=task-definition-2--search-service>Task definition 2 — search-service</h4><pre tabindex=0><code>{
+  &#34;taskDefinitionArn&#34;: &#34;arn:aws:ecs:ap-southeast-1:{account-id}:task-definition/vsp-ecs-search-service-task:11&#34;,
+  &#34;containerDefinitions&#34;: [
+    {
+      &#34;name&#34;: &#34;search-service-container&#34;,
+      &#34;image&#34;: {image_uri},
+      &#34;cpu&#34;: 0,
+      &#34;portMappings&#34;: [
+        {
+          &#34;containerPort&#34;: 8000,
+          &#34;hostPort&#34;: 8000,
+          &#34;protocol&#34;: &#34;tcp&#34;,
+          &#34;name&#34;: &#34;search-service-container-8000-tcp&#34;,
+          &#34;appProtocol&#34;: &#34;http&#34;
+        },
+        {
+          &#34;containerPort&#34;: 50052,
+          &#34;hostPort&#34;: 50052,
+          &#34;protocol&#34;: &#34;tcp&#34;,
+          &#34;name&#34;: &#34;search-service-container-50052-tcp&#34;,
+          &#34;appProtocol&#34;: &#34;grpc&#34;
+        }
+      ],
+      &#34;essential&#34;: true,
+      &#34;environment&#34;: [
+        {
+          &#34;name&#34;: &#34;REDIS_TLS&#34;,
+          &#34;value&#34;: &#34;true&#34;
+        }
+      ],
+      &#34;mountPoints&#34;: [],
+      &#34;volumesFrom&#34;: [],
+      &#34;secrets&#34;: [
+        {
+          &#34;name&#34;: &#34;API_SERVICE_GRPC_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/API_SERVICE_GRPC_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;CLOUDFRONT_DOMAIN_NAME&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/CLOUDFRONT_DOMAIN_NAME&#34;
+        },
+        {
+          &#34;name&#34;: &#34;DATABASE_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/DATABASE_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;GRPC_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/GRPC_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;JWT_SECRET&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/JWT_SECRET&#34;
+        },
+        {
+          &#34;name&#34;: &#34;MQ_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/MQ_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;QDRANT_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/QDRANT_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;REDIS_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/REDIS_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_ACCESS_KEY&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/S3_ACCESS_KEY&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_BUCKET&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/S3_BUCKET&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_REGION&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/S3_REGION&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_SECRET_KEY&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/search/S3_SECRET_KEY&#34;
+        }
+      ],
+      &#34;logConfiguration&#34;: {
+        &#34;logDriver&#34;: &#34;awslogs&#34;,
+        &#34;options&#34;: {
+          &#34;awslogs-group&#34;: &#34;/ecs/vsp-ecs-search-service-task&#34;,
+          &#34;awslogs-create-group&#34;: &#34;true&#34;,
+          &#34;awslogs-region&#34;: &#34;ap-southeast-1&#34;,
+          &#34;awslogs-stream-prefix&#34;: &#34;ecs&#34;
+        },
+        &#34;secretOptions&#34;: []
+      },
+      &#34;healthCheck&#34;: {
+        &#34;command&#34;: [
+          &#34;CMD-SHELL&#34;,
+          &#34;curl -f http://localhost:8000/api/v1/health || exit 1&#34;
+        ],
+        &#34;interval&#34;: 30,
+        &#34;timeout&#34;: 5,
+        &#34;retries&#34;: 5,
+        &#34;startPeriod&#34;: 200
+      },
+      &#34;systemControls&#34;: []
+    }
+  ],
+  &#34;family&#34;: &#34;vsp-ecs-search-service-task&#34;,
+  &#34;taskRoleArn&#34;: &#34;arn:aws:iam::{account-id}:role/ecsTaskExecutionRole&#34;,
+  &#34;executionRoleArn&#34;: &#34;arn:aws:iam::{account-id}:role/ecsTaskExecutionRole&#34;,
+  &#34;networkMode&#34;: &#34;awsvpc&#34;,
+  &#34;revision&#34;: 11,
+  &#34;volumes&#34;: [],
+  &#34;status&#34;: &#34;ACTIVE&#34;,
+  &#34;requiresAttributes&#34;: [
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.logging-driver.awslogs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.execution-role-awslogs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.ecr-auth&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.19&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.task-iam-role&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.container-health-check&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.execution-role-ecr-pull&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.secrets.ssm.environment-variables&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.18&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.task-eni&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.29&#34;
+    }
+  ],
+  &#34;placementConstraints&#34;: [],
+  &#34;compatibilities&#34;: [
+    &#34;EC2&#34;,
+    &#34;MANAGED_INSTANCES&#34;,
+    &#34;FARGATE&#34;
+  ],
+  &#34;runtimePlatform&#34;: {
+    &#34;cpuArchitecture&#34;: &#34;X86_64&#34;,
+    &#34;operatingSystemFamily&#34;: &#34;LINUX&#34;
+  },
+  &#34;requiresCompatibilities&#34;: [
+    &#34;FARGATE&#34;
+  ],
+  &#34;cpu&#34;: &#34;4096&#34;,
+  &#34;memory&#34;: &#34;9216&#34;,
+  &#34;registeredAt&#34;: &#34;2026-07-29T15:59:09.260Z&#34;,
+  &#34;registeredBy&#34;: &#34;arn:aws:iam::{account-id}:root&#34;,
+  &#34;enableFaultInjection&#34;: false,
+  &#34;tags&#34;: []
+}
+</code></pre><p>Chú ý sự phân tách giữa <code>secrets</code> và <code>environment</code>. Các giá trị trong <code>secrets</code> được kéo từ Parameter Store lúc task khởi động và không bao giờ hiện ra trong console; còn giá trị trong <code>environment</code> được lưu thẳng trong task definition dưới dạng văn bản thuần. Bất cứ thứ gì chứa mật khẩu đều phải nằm ở <code>secrets</code>.</p><p>Giá trị <code>startPeriod</code> 120 giây rất quan trọng với container này. <code>fastembed</code> tải và nạp mô hình embedding trong lần khởi động đầu tiên, mất hơn một phút. Nếu không cho đủ thời gian khởi động, health check sẽ thất bại ngay trong lúc mô hình đang nạp và ECS giết task trước khi nó kịp sẵn sàng — tạo ra vòng lặp restart vô tận trông y hệt một lỗi crash.</p><h4 id=task-definition-3--api-service>Task definition 3 — api-service</h4><pre tabindex=0><code>{
+  &#34;taskDefinitionArn&#34;: &#34;arn:aws:ecs:ap-southeast-1:{account-id}:task-definition/vsp-ecs-api-service-task:18&#34;,
+  &#34;containerDefinitions&#34;: [
+    {
+      &#34;name&#34;: &#34;api-service-container&#34;,
+      &#34;image&#34;: {image_uri},
+      &#34;cpu&#34;: 0,
+      &#34;portMappings&#34;: [
+        {
+          &#34;containerPort&#34;: 8080,
+          &#34;hostPort&#34;: 8080,
+          &#34;protocol&#34;: &#34;tcp&#34;,
+          &#34;name&#34;: &#34;api-service-container-8080-tcp&#34;,
+          &#34;appProtocol&#34;: &#34;http&#34;
+        },
+        {
+          &#34;containerPort&#34;: 50051,
+          &#34;hostPort&#34;: 50051,
+          &#34;protocol&#34;: &#34;tcp&#34;,
+          &#34;name&#34;: &#34;api-service-container-50051-tcp&#34;,
+          &#34;appProtocol&#34;: &#34;grpc&#34;
+        }
+      ],
+      &#34;essential&#34;: true,
+      &#34;environment&#34;: [
+        {
+          &#34;name&#34;: &#34;REDIS_TLS&#34;,
+          &#34;value&#34;: &#34;true&#34;
+        }
+      ],
+      &#34;environmentFiles&#34;: [],
+      &#34;mountPoints&#34;: [],
+      &#34;volumesFrom&#34;: [],
+      &#34;secrets&#34;: [
+        {
+          &#34;name&#34;: &#34;BUCKET_NAME&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/BUCKET_NAME&#34;
+        },
+        {
+          &#34;name&#34;: &#34;CDN_DOMAIN&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/CDN_DOMAIN&#34;
+        },
+        {
+          &#34;name&#34;: &#34;CLOUDFRONT_DOMAIN_NAME&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/CLOUDFRONT_DOMAIN_NAME&#34;
+        },
+        {
+          &#34;name&#34;: &#34;CLOUDFRONT_KEY_PAIR_ID&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/CLOUDFRONT_KEY_PAIR_ID&#34;
+        },
+        {
+          &#34;name&#34;: &#34;CLOUDFRONT_PRIVATE_KEY&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/CLOUDFRONT_PRIVATE_KEY&#34;
+        },
+        {
+          &#34;name&#34;: &#34;COOKIE_SECRET&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/COOKIE_SECRET&#34;
+        },
+        {
+          &#34;name&#34;: &#34;DATABASE_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/DATABASE_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;FIREBASE_CLIENT_EMAIL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/FIREBASE_CLIENT_EMAIL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;FIREBASE_PRIVATE_KEY&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/FIREBASE_PRIVATE_KEY&#34;
+        },
+        {
+          &#34;name&#34;: &#34;FIREBASE_PROJECT_ID&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/FIREBASE_PROJECT_ID&#34;
+        },
+        {
+          &#34;name&#34;: &#34;GRPC_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/GRPC_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;JWT_SECRET&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/JWT_SECRET&#34;
+        },
+        {
+          &#34;name&#34;: &#34;QDRANT_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/QDRANT_URL&#34;
+        },
+        {
+          &#34;name&#34;: &#34;QUEUE_HOST&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/QUEUE_HOST&#34;
+        },
+        {
+          &#34;name&#34;: &#34;QUEUE_NAME&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/QUEUE_NAME&#34;
+        },
+        {
+          &#34;name&#34;: &#34;QUEUE_PORT&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/QUEUE_PORT&#34;
+        },
+        {
+          &#34;name&#34;: &#34;RABBITMQ_URI&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/RABBITMQ_URI&#34;
+        },
+        {
+          &#34;name&#34;: &#34;REDIS_HOST&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/REDIS_HOST&#34;
+        },
+        {
+          &#34;name&#34;: &#34;REDIS_PORT&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/REDIS_PORT&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_ACCESS_KEY_ID&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/S3_ACCESS_KEY_ID&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_REGION&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/S3_REGION&#34;
+        },
+        {
+          &#34;name&#34;: &#34;S3_SECRET_ACCESS_KEY&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/S3_SECRET_ACCESS_KEY&#34;
+        },
+        {
+          &#34;name&#34;: &#34;SEARCH_SERVICE_GRPC_URL&#34;,
+          &#34;valueFrom&#34;: &#34;arn:aws:ssm:ap-southeast-1:{account-id}:parameter/vsp/api/SEARCH_SERVICE_GRPC_URL&#34;
+        }
+      ],
+      &#34;ulimits&#34;: [],
+      &#34;logConfiguration&#34;: {
+        &#34;logDriver&#34;: &#34;awslogs&#34;,
+        &#34;options&#34;: {
+          &#34;awslogs-group&#34;: &#34;/ecs/vsp-ecs-api-service-task&#34;,
+          &#34;awslogs-create-group&#34;: &#34;true&#34;,
+          &#34;awslogs-region&#34;: &#34;ap-southeast-1&#34;,
+          &#34;awslogs-stream-prefix&#34;: &#34;ecs&#34;
+        },
+        &#34;secretOptions&#34;: []
+      },
+      &#34;healthCheck&#34;: {
+        &#34;command&#34;: [
+          &#34;CMD-SHELL&#34;,
+          &#34;curl -f http://localhost:8080/health || exit 1&#34;
+        ],
+        &#34;interval&#34;: 30,
+        &#34;timeout&#34;: 5,
+        &#34;retries&#34;: 5,
+        &#34;startPeriod&#34;: 200
+      },
+      &#34;systemControls&#34;: []
+    }
+  ],
+  &#34;family&#34;: &#34;vsp-ecs-api-service-task&#34;,
+  &#34;taskRoleArn&#34;: &#34;arn:aws:iam::{account-id}:role/ecsTaskExecutionRole&#34;,
+  &#34;executionRoleArn&#34;: &#34;arn:aws:iam::{account-id}:role/ecsTaskExecutionRole&#34;,
+  &#34;networkMode&#34;: &#34;awsvpc&#34;,
+  &#34;revision&#34;: 18,
+  &#34;volumes&#34;: [],
+  &#34;status&#34;: &#34;ACTIVE&#34;,
+  &#34;requiresAttributes&#34;: [
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.logging-driver.awslogs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.execution-role-awslogs&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.ecr-auth&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.19&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.task-iam-role&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.container-health-check&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.execution-role-ecr-pull&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.secrets.ssm.environment-variables&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.18&#34;
+    },
+    {
+      &#34;name&#34;: &#34;ecs.capability.task-eni&#34;
+    },
+    {
+      &#34;name&#34;: &#34;com.amazonaws.ecs.capability.docker-remote-api.1.29&#34;
+    }
+  ],
+  &#34;placementConstraints&#34;: [],
+  &#34;compatibilities&#34;: [
+    &#34;EC2&#34;,
+    &#34;MANAGED_INSTANCES&#34;,
+    &#34;FARGATE&#34;
+  ],
+  &#34;runtimePlatform&#34;: {
+    &#34;cpuArchitecture&#34;: &#34;X86_64&#34;,
+    &#34;operatingSystemFamily&#34;: &#34;LINUX&#34;
+  },
+  &#34;requiresCompatibilities&#34;: [
+    &#34;FARGATE&#34;
+  ],
+  &#34;cpu&#34;: &#34;2048&#34;,
+  &#34;memory&#34;: &#34;5120&#34;,
+  &#34;registeredAt&#34;: &#34;2026-07-29T13:54:46.984Z&#34;,
+  &#34;registeredBy&#34;: &#34;arn:aws:iam::{account-id}:root&#34;,
+  &#34;enableFaultInjection&#34;: false,
+  &#34;tags&#34;: []
+}
+</code></pre><h4 id=chạy-migration-cho-database>Chạy migration cho database</h4><p>Trước khi API khởi động, schema phải tồn tại. Hãy chạy migration như một task chạy một lần, thay vì nhét nó vào bước khởi động container — một migration chạy mỗi lần task boot sẽ tự đua với chính nó ngay khi bạn có nhiều hơn một task.</p><p><strong>Clusters</strong> → <code>vsp-ecs-cluster</code> → <strong>Tasks</strong> → <strong>Run new task</strong>:</p><table><thead><tr><th style=text-align:left>Mục</th><th style=text-align:left>Giá trị</th></tr></thead><tbody><tr><td style=text-align:left>Launch type</td><td style=text-align:left>FARGATE</td></tr><tr><td style=text-align:left>Task definition</td><td style=text-align:left><code>vsp-api-service</code></td></tr><tr><td style=text-align:left>Subnet</td><td style=text-align:left><code>10.0.10.0/24</code></td></tr><tr><td style=text-align:left>Security groups</td><td style=text-align:left><code>vsp-ecs-tasks-sg</code></td></tr><tr><td style=text-align:left>Public IP</td><td style=text-align:left>Disabled</td></tr></tbody></table><p>Ở phần <strong>Container overrides</strong>, đặt command thành:</p><pre tabindex=0><code>npx,prisma,migrate,deploy
+</code></pre><p>Console yêu cầu danh sách ngăn cách bằng dấu phẩy, không phải một chuỗi shell. Chạy task rồi theo dõi log group <code>/ecs/vsp-api-service</code> trên CloudWatch cho tới khi nó kết thúc với exit code 0.</p><h4 id=tạo-ba-service>Tạo ba service</h4><p>Giờ tạo các ECS service, <strong>theo đúng thứ tự này</strong>. Với từng service: <strong>Clusters</strong> → <code>vsp-ecs-cluster</code> → <strong>Services</strong> → <strong>Create</strong>.</p><p><strong>1. Qdrant</strong></p><table><thead><tr><th style=text-align:left>Mục</th><th style=text-align:left>Giá trị</th></tr></thead><tbody><tr><td style=text-align:left>Task definition</td><td style=text-align:left><code>vsp-qdrant</code></td></tr><tr><td style=text-align:left>Service name</td><td style=text-align:left><code>qdrant</code></td></tr><tr><td style=text-align:left>Desired tasks</td><td style=text-align:left>1</td></tr><tr><td style=text-align:left>Subnet</td><td style=text-align:left><code>10.0.10.0/24</code></td></tr><tr><td style=text-align:left>Security groups</td><td style=text-align:left><code>vsp-qdrant-sg</code></td></tr><tr><td style=text-align:left>Public IP</td><td style=text-align:left>Disabled</td></tr><tr><td style=text-align:left>Service discovery</td><td style=text-align:left>Bật, namespace <code>vsp.internal</code>, service name <code>qdrant</code></td></tr><tr><td style=text-align:left>Load balancing</td><td style=text-align:left>Không</td></tr></tbody></table><p>Chờ task chuyển sang <code>RUNNING</code> rồi mới làm tiếp.</p><p><img alt=qdrant src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/qdrant-service.png></p><p><strong>2. search-service</strong></p><table><thead><tr><th style=text-align:left>Mục</th><th style=text-align:left>Giá trị</th></tr></thead><tbody><tr><td style=text-align:left>Task definition</td><td style=text-align:left><code>vsp-search-service</code></td></tr><tr><td style=text-align:left>Service name</td><td style=text-align:left><code>search-service</code></td></tr><tr><td style=text-align:left>Desired tasks</td><td style=text-align:left>1</td></tr><tr><td style=text-align:left>Subnet</td><td style=text-align:left><code>10.0.10.0/24</code></td></tr><tr><td style=text-align:left>Security groups</td><td style=text-align:left><code>vsp-ecs-tasks-sg</code>, <code>vsp-grpc-search-sg</code></td></tr><tr><td style=text-align:left>Public IP</td><td style=text-align:left>Disabled</td></tr><tr><td style=text-align:left>Service discovery</td><td style=text-align:left>Bật, service name <code>search-service</code></td></tr><tr><td style=text-align:left>Load balancing</td><td style=text-align:left>Chưa gắn — sẽ thêm ở 5.6</td></tr><tr><td style=text-align:left>Deployment failure detection</td><td style=text-align:left>Bật rollback khi thất bại</td></tr></tbody></table><p><img alt=search src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/search.png></p><p><strong>3. api-service</strong></p><table><thead><tr><th style=text-align:left>Mục</th><th style=text-align:left>Giá trị</th></tr></thead><tbody><tr><td style=text-align:left>Task definition</td><td style=text-align:left><code>vsp-api-service</code></td></tr><tr><td style=text-align:left>Service name</td><td style=text-align:left><code>api-service</code></td></tr><tr><td style=text-align:left>Desired tasks</td><td style=text-align:left>1</td></tr><tr><td style=text-align:left>Subnet</td><td style=text-align:left><code>10.0.10.0/24</code></td></tr><tr><td style=text-align:left>Security groups</td><td style=text-align:left><code>vsp-ecs-tasks-sg</code>, <code>vsp-grpc-api-sg</code></td></tr><tr><td style=text-align:left>Public IP</td><td style=text-align:left>Disabled</td></tr><tr><td style=text-align:left>Service discovery</td><td style=text-align:left>Bật, service name <code>api-service</code></td></tr><tr><td style=text-align:left>Load balancing</td><td style=text-align:left>Chưa gắn — sẽ thêm ở 5.6</td></tr><tr><td style=text-align:left>Deployment failure detection</td><td style=text-align:left>Bật rollback khi thất bại</td></tr></tbody></table><p><img alt=api src=/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/api.png></p><p>Mỗi service ứng dụng được gắn <strong>hai</strong> security group: <code>vsp-ecs-tasks-sg</code> dùng chung cho HTTP, cộng thêm group gRPC riêng của nó. Đây chính là lúc việc tách group ở mục 5.3.2 phát huy tác dụng.</p><p><strong>Deployment failure detection</strong> bật cơ chế circuit breaker của ECS. Nếu một lần deploy không thể đạt trạng thái ổn định, ECS sẽ dừng lại và tự động rollback về task definition trước đó, thay vì để service mắc kẹt ở trạng thái deploy dở dang.</p><footer class=footline></footer></div></div><div id=navigation><a class="nav nav-prev" href=/fcaj-internship-report/vi/5-workshop/5.4-data-layer/ title="Tầng dữ liệu"><i class="fa fa-chevron-left"></i></a>
+<a class="nav nav-next" href=/fcaj-internship-report/vi/5-workshop/5.6-public-access/ title="Đưa hệ thống ra Internet với ALB và CloudFront" style=margin-right:0><i class="fa fa-chevron-right"></i></a></div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px><div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/fcaj-internship-report/js/clipboard.min.js?1785505474></script><script src=/fcaj-internship-report/js/perfect-scrollbar.min.js?1785505474></script><script src=/fcaj-internship-report/js/perfect-scrollbar.jquery.min.js?1785505474></script><script src=/fcaj-internship-report/js/jquery.sticky.js?1785505474></script><script src=/fcaj-internship-report/js/featherlight.min.js?1785505474></script><script src=/fcaj-internship-report/js/highlight.pack.js?1785505474></script><script>hljs.initHighlightingOnLoad()</script><script src=/fcaj-internship-report/js/modernizr.custom-3.6.0.js?1785505474></script><script src=/fcaj-internship-report/js/learn.js?1785505474></script><script src=/fcaj-internship-report/js/hugo-learn.js?1785505474></script><link href=/fcaj-internship-report/mermaid/mermaid.css?1785505474 rel=stylesheet><script src=/fcaj-internship-report/mermaid/mermaid.js?1785505474></script><script>mermaid.initialize({startOnLoad:!0})</script><script>(function(e,t,n,s,o,i,a){e.GoogleAnalyticsObject=o,(e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date),(i=t.createElement(n),a=t.getElementsByTagName(n)[0]),i.async=1,i.src=s,a.parentNode.insertBefore(i,a)})(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-158079754-2","auto"),ga("send","pageview")</script></body></html>
