@@ -18,8 +18,8 @@ Một quyết định thiết kế xuyên suốt workshop là **toàn bộ compu
 
 #### Những gì chúng ta sẽ xây dựng
 
-+ Một **VPC** với public/private subnet, security group, và VPC Endpoint, CloudWatch Logs, Systems Manager, Amazon MQ.
-+ Tầng dữ liệu được quản lý: **Amazon RDS for PostgreSQL**, **Amazon ElastiCache for Valkey**, **Amazon S3** và **Amazon EFS**.
++ Một **VPC** với public/private subnet, security group, và VPC Endpoint cho ECR, CloudWatch Logs, Systems Manager, Amazon MQ.
++ Tầng dữ liệu được quản lý: **Amazon RDS for PostgreSQL**, **Amazon ElastiCache for Valkey**, **Amazon MQ (RabbitMQ)** và **Amazon EFS**.
 + Ba service trên **Amazon ECS Fargate**: `api-service`, `search-service`, và **Qdrant** vector database tự host với dữ liệu lưu bền vững trên EFS.
 + Đường truy cập công khai qua **Application Load Balancer** và **Amazon CloudFront**, kèm domain riêng (Route 53) và chứng chỉ TLS (AWS Certificate Manager).
 + Một **pipeline CI/CD** tự động dùng GitHub Actions với IAM OIDC federated role, không lưu bất kỳ AWS access key tĩnh nào.

@@ -50,11 +50,10 @@ Users reach the platform through a custom domain (Route 53) → CloudFront (CDN,
 
 ### 4. Technical Implementation
 **Implementation Phases**
-The project has two parts — building the application (two services plus the database schema) and setting up the AWS infrastructure — each following 4 phases:
-- Research and Architecture Design: Study microservice patterns, gRPC, message queues, and vector search approaches suited to a video workload.
-- Cost Estimation and Feasibility Check: Estimate ECS Fargate/RDS/ElastiCache/Amazon MQ costs, and evaluate Fargate Spot and VPC Endpoints (instead of a NAT Gateway) as optimizations.
-- Architecture Refinement: Optimize the ALB health check (a dedicated `/health` endpoint, since Apollo GraphQL does not suit a default GET probe) and apply least-privilege security group rules.
-- Develop, Test, and Deploy: Implement both services, write tests, containerize with Docker, and set up CI/CD (GitHub Actions) to build and deploy to ECS automatically.
+The project has two parts — building the application (two services plus the database schema) and setting up and deploying the AWS infrastructure — each following 3 phases:
+1. Development and Testing: Code both services, write tests, containerize with Docker, and set up CI/CD (GitHub Actions).
+2. Research and Architecture Design, Cost Estimation: Research AWS infrastructure options and select the services that best optimize cost.
+3. Build AWS Infrastructure and Deploy: Wire the selected services together, deploy, and fine-tune.
 
 **Technical Requirements**
 - **api_service**: NestJS 11, Prisma ORM, GraphQL (Apollo), BullMQ, FFmpeg, AWS SDK (S3 presigned URLs), and a gRPC server/client.
@@ -72,34 +71,29 @@ The project has two parts — building the application (two services plus the da
 The estimate below is based on public AWS pricing for the **ap-southeast-1** region at the time of writing, reflecting the intended architecture (before AWS Free Tier credits; actual costs vary with traffic).
 
 ### Infrastructure Costs (estimated monthly)
-- Amazon ECS Fargate/Fargate Spot (3 tasks: api-service 2 vCPU/5GB, search-service 4 vCPU/9GB, qdrant 0.25 vCPU/2GB): ~$128.50
-- VPC Interface Endpoints (~8 endpoints, replacing a NAT Gateway): ~$58.40
-- Amazon MQ (mq.m7g.medium, single-instance): ~$56.00
-- Amazon ElastiCache for Valkey (2× cache.t4g.micro, one per service): ~$29.50
-- Amazon RDS for PostgreSQL (db.t3.micro, 20GB gp3): ~$17.30
-- Amazon CloudFront (CDN): ~$3.00
-- Amazon EFS + AWS Backup: ~$2.00
-- Amazon S3 (storage + requests): ~$1.00
-- Amazon Route 53 (2 hosted zones): ~$1.00
-- Amazon ECR + Amazon CloudWatch Logs: ~$1.70
+- Amazon ECS Fargate/Fargate Spot (3 tasks: api-service 2 vCPU/5GB, search-service 4 vCPU/9GB, qdrant 0.25 vCPU/2GB): ~$56
+- VPC Interface Endpoints: ~$20
+- Amazon MQ (mq.m7g.medium, single-instance): ~$50
+- Amazon ElastiCache for Valkey (2× cache.t4g.micro, one per service): ~$30
+- Amazon RDS for PostgreSQL (db.t3.micro, 20GB gp3): ~$17
+- Amazon CloudFront (CDN): ~$3
+- Amazon EFS + AWS Backup: ~$2
+- Amazon S3 (storage + requests): ~$1
+- Amazon Route 53 (2 hosted zones): ~$1
+- Amazon ECR + Amazon CloudWatch Logs: ~$12
 - AWS Certificate Manager, SSM Parameter Store, IAM/OIDC: free
 
-**Total**: ~$298/month, ~$450 for the full internship period (15/06–31/07/2026, ~6.5 weeks)
-
-- **Hardware**: none — the entire system runs fully in the cloud.
-
-> Note: VPC Interface Endpoints (used instead of a NAT Gateway to avoid depending on internet egress) account for a significant share of the cost, close to a single NAT Gateway. This is a network-isolation-versus-cost trade-off worth revisiting during later optimization.
+**Total**: ~$182/month
 
 ### 7. Risk Assessment
 #### Risk Matrix
 - Synchronization failures between the two services over gRPC/RabbitMQ: High impact, medium probability.
-- Video transcoding consuming excessive compute/cost for large files: Medium impact, medium probability.
+- Amazon MQ's cost is relatively high if not managed carefully, which could lead to unexpected expenses: Medium impact, medium probability.
 - RDS/ElastiCache running single-AZ (no Multi-AZ): High impact if an AZ is lost, low probability.
 - Exceeding the personal budget during the internship: Medium impact, medium probability.
 
 #### Mitigation Strategies
 - Inter-service sync: Use a dead-letter queue for RabbitMQ, bounded retries, and correlation IDs in logs for debugging.
-- Transcoding cost: Cap upload file size and limit output quality variants to the source resolution.
 - Availability: Consider enabling Multi-AZ for RDS if the budget allows after reviewing actual costs.
 - Budget: Enable AWS Budget alerts and prefer Fargate Spot for tasks that tolerate brief interruptions.
 
@@ -109,6 +103,6 @@ The estimate below is based on public AWS pricing for the **ap-southeast-1** reg
 
 ### 8. Expected Outcomes
 #### Technical Improvements
-A complete video streaming system with semantic search, asynchronous transcoding, and automated CI/CD — rather than a single-purpose serverless demo.
+A complete microservice system running on AWS, with automated CI/CD.
 #### Long-term Value
 A reusable foundation of microservice architecture and AWS production operations skills for future projects, plus a technical portfolio piece demonstrating real system design capability.

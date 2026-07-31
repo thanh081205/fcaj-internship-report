@@ -60,7 +60,14 @@ Dự án gồm 2 phần — xây dựng ứng dụng (2 service + database schem
 - *search_service*: Python FastAPI, gRPC, thư viện sinh embedding (fastembed), Qdrant client, RabbitMQ consumer/publisher.
 - *Hạ tầng*: Docker multi-stage build cho cả 2 service, ECS task definition (Fargate), GitHub Actions với OIDC role để build/push ECR và deploy ECS không cần static AWS key.
 
-### 5. Ước tính ngân sách
+### 5. Timeline dự án
+*Tiến độ dự án*
+- **15/06 – 21/06/2026 (Tuần 1)**: Thiết kế kiến trúc microservice và database schema; tạo VPC, subnet, security group trên AWS Console.
+- **22/06 – 05/07/2026 (Tuần 2–3)**: Phát triển `api_service` (xác thực, upload video, GraphQL API) và dựng khung `search_service` (FastAPI + gRPC).
+- **06/07 – 19/07/2026 (Tuần 4–5)**: Hoàn thiện pipeline transcode bất đồng bộ (BullMQ + FFmpeg), tích hợp RabbitMQ và Qdrant cho tìm kiếm ngữ nghĩa, thiết lập ECS cluster, ALB, CloudFront và CI/CD.
+- **20/07 – 31/07/2026 (Tuần 6–6.5)**: Kiểm thử end-to-end trên staging, sửa lỗi networking và health-check, hoàn thiện tài liệu và bàn giao.
+
+### 6. Ước tính ngân sách
 Ước tính dựa trên bảng giá công khai AWS khu vực **ap-southeast-1** tại thời điểm viết đề xuất, theo đúng kiến trúc dự định (chưa trừ AWS Free Tier, chi phí thực tế có thể thay đổi theo lưu lượng sử dụng).
 
 *Chi phí hạ tầng (ước tính hàng tháng)*
@@ -78,10 +85,10 @@ Dự án gồm 2 phần — xây dựng ứng dụng (2 service + database schem
 
 *Tổng*: ~182 USD/tháng
 
-### 6. Đánh giá rủi ro
+### 7. Đánh giá rủi ro
 *Ma trận rủi ro*
 - Lỗi đồng bộ giữa 2 service qua gRPC/RabbitMQ: Ảnh hưởng cao, xác suất trung bình.
-- Chi phí của dịch vụ Amaxon MQ khá cao nếu không quản lí tốt thì có thể gây tổn thất tiền.
+- Chi phí của dịch vụ Amazon MQ khá cao nếu không quản lý tốt thì có thể gây tổn thất tiền: Ảnh hưởng trung bình, xác suất trung bình.
 - RDS/ElastiCache chạy single-AZ (không Multi-AZ): Ảnh hưởng cao nếu mất AZ, xác suất thấp.
 - Vượt ngân sách cá nhân trong lúc thực tập: Ảnh hưởng trung bình, xác suất trung bình.
 
@@ -94,6 +101,6 @@ Dự án gồm 2 phần — xây dựng ứng dụng (2 service + database schem
 - Rollback tự động qua ECS deployment circuit breaker nếu bản deploy mới lỗi health check.
 - Giữ lại task definition revision trước đó để revert thủ công nếu cần.
 
-### 7. Kết quả kỳ vọng
+### 8. Kết quả kỳ vọng
 *Cải tiến kỹ thuật*: Có một hệ thống microservice hoàn chỉnh chạy trên aws, và CI/CD tự động.
 *Giá trị dài hạn*: Nền tảng kỹ năng kiến trúc microservice + AWS production ops có thể tái sử dụng cho các dự án sau này, sản phẩm portfolio kỹ thuật thể hiện năng lực thiết kế hệ thống thực chiến.

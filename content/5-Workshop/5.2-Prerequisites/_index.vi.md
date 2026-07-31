@@ -18,7 +18,7 @@ Workshop này dùng region **Asia Pacific (Singapore) — `ap-southeast-1`** xuy
 
 #### Quyền IAM
 
-Cách tạo: mở console **IAM**, vào **Policies** → **Create policy**, chuyển sang tab **JSON** và dán nội dung đã được thay đỏi cho phù hợp vào.
+Cách tạo: mở console **IAM**, vào **Policies** → **Create policy**, chuyển sang tab **JSON** và dán nội dung đã được thay đổi cho phù hợp vào.
 
 Tạo quyền cho việc deploy 
 
