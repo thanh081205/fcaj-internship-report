@@ -36,9 +36,9 @@ A target group is what the ALB forwards to. Create two — **EC2** console → *
 
 Do not register any targets manually. ECS registers and deregisters task IPs itself as tasks come and go — that is the whole point of attaching the service to the target group.
 
-![api target](/images/5-Workshop/5.6-Public-access/api-target.png)
+![api target](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/api-target.png)
 
-![search target](/images/5-Workshop/5.6-Public-access/search-target.png)
+![search target](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/search-target.png)
 
 #### Create the Application Load Balancer
 
@@ -73,7 +73,7 @@ The default action sends everything to the API. Add a rule so search traffic rea
 
 Rules are evaluated by priority, lowest first, and the default action runs only if no rule matches.
 
-![alb](/images/5-Workshop/5.6-Public-access/alb.png)
+![alb](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/alb.png)
 
 #### Attach the ECS services to the target groups
 
@@ -87,9 +87,9 @@ Back in **ECS** → `vsp-ecs-cluster` → **Services** → `api-service` → **U
 | Target group | `vsp-api-tg` |
 | Health check grace period | 120 |
 
-![service target api](/images/5-Workshop/5.6-Public-access/ser-tar-api.png)
+![service target api](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/ser-tar-api.png)
 
-![service target search](/images/5-Workshop/5.6-Public-access/ser-tar-search.png)
+![service target search](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/ser-tar-search.png)
 
 Repeat for `search-service` with `search-service-container` 8000, target group `vsp-search-tg`, and a grace period of **180** seconds.
 
@@ -97,7 +97,7 @@ The **health check grace period** tells ECS to ignore load balancer health check
 
 Wait for both target groups to show `healthy`:
 
-![healthy targets](/images/5-Workshop/5.6-Public-access/health.png)
+![healthy targets](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/health.png)
 
 
 #### Create the Origin Access Control
@@ -112,7 +112,7 @@ Before the distribution, create the identity CloudFront uses to read from S3. **
 
 Origin Access Control replaces the older Origin Access Identity and is what lets the bucket stay fully private while CloudFront still reads from it.
 
-![origin access s3](/images/5-Workshop/5.6-Public-access/oas3.png)
+![origin access s3](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/oas3.png)
 
 #### Create the distribution
 
@@ -157,7 +157,7 @@ Origin Access Control replaces the older Origin Access Identity and is what lets
 | Security policy | TLSv1.2_2021 |
 | Default root object | leave empty |
 
-![cloudfront behaviors](/images/5-Workshop/5.6-Public-access/cloudfront-behaviors.png)
+![cloudfront behaviors](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/cloudfront-behaviors.png)
 
 #### Update the S3 bucket policy
 
@@ -197,7 +197,7 @@ Paste it under **S3** → your bucket → **Permissions** → **Bucket policy**.
 | Route traffic to | Alias to CloudFront distribution |
 | Distribution | your distribution |
 
-![route53 alias record](/images/5-Workshop/5.6-Public-access/record.png)
+![route53 alias record](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/record.png)
 
 #### Test the whole path
 
@@ -209,4 +209,4 @@ curl -s https://app.example.com/api/v1/health
 
 The first should return CloudFront IP addresses; the second `200 OK` from the API through the ALB; the third the search service, confirming the listener rule works.
 
-![ping](/images/5-Workshop/5.6-Public-access/ping.png)
+![ping](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/ping.png)

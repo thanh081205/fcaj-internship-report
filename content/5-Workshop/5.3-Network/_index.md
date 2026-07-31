@@ -32,7 +32,7 @@ Two public subnets exist because an Application Load Balancer requires subnets i
 Everything else is placed in a single private subnet in `ap-southeast-1a`. That is a deliberate simplification to keep the workshop affordable: a second AZ would mean a second set of VPC Endpoints and a Multi-AZ database, roughly doubling the hourly cost. It also means an AZ failure takes the platform down. A production deployment would span both AZs.
 {{% /notice %}}
 
-![network diagram](/images/5-Workshop/5.3-Network/network-diagram.png)
+![network diagram](/fcaj-internship-report/images/5-Workshop/5.3-Network/network-diagram.png)
 
 #### Traffic paths
 

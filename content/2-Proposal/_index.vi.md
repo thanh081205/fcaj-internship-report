@@ -25,7 +25,7 @@ Dự án mang lại kỹ năng thực chiến về thiết kế microservice, gi
 ### 3. Kiến trúc giải pháp
 Người dùng truy cập qua domain riêng (Route 53) → CloudFront (CDN, TLS) → Application Load Balancer (định tuyến theo path `/graphql/*` cho `api_service`, `/api/*` cho `search_service`) → ECS Fargate cluster gồm 3 service: `api-service`, `search-service`, và `qdrant` (vector database tự triển khai, lưu dữ liệu bền vững trên EFS). Hai service ứng dụng giao tiếp gRPC song hướng và cùng kết nối tới RDS PostgreSQL (lưu metadata quan hệ), ElastiCache Valkey (session, hàng đợi BullMQ, cache), và Amazon MQ (đồng bộ metadata bất đồng bộ). Video gốc và bản đã transcode lưu trên S3, phục vụ qua CloudFront. Toàn bộ compute chạy trong private subnet, ra ngoài qua VPC Endpoints thay vì NAT Gateway để tối ưu chi phí.
 
-![Solution Architecture](/images/2-Proposal/solution_architecture.jpg)
+![Solution Architecture](/fcaj-internship-report/images/2-Proposal/solution_architecture.jpg)
 
 *Dịch vụ AWS sử dụng*
 - *Amazon ECS (Fargate/Fargate Spot)*: chạy container cho `api-service`, `search-service`, `qdrant`.

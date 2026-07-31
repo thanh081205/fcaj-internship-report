@@ -12,7 +12,7 @@ pre : " <b> 5.3.1 </b> "
 
 Mở console **VPC**, chọn **Create VPC**.
 
-![tạo vpc](/images/5-Workshop/5.3-Network/create-vpc.png)
+![tạo vpc](/fcaj-internship-report/images/5-Workshop/5.3-Network/create-vpc.png)
 
 Thiết lập như sau:
 
@@ -30,25 +30,25 @@ Chọn **Create VPC** và chờ trình hướng dẫn chạy xong.
 
 Tạo subnet: hai public subnet là `10.0.1.0/24` và `10.0.2.0/24` và một private subnet là `10.0.10.0/24`.
 
-![subnet 1](/images/5-Workshop/5.3-Network/subnet1.png)
+![subnet 1](/fcaj-internship-report/images/5-Workshop/5.3-Network/subnet1.png)
 
-![subnet 2](/images/5-Workshop/5.3-Network/subnet2.png)
+![subnet 2](/fcaj-internship-report/images/5-Workshop/5.3-Network/subnet2.png)
 
-![subnet 3](/images/5-Workshop/5.3-Network/subnet3.png)
+![subnet 3](/fcaj-internship-report/images/5-Workshop/5.3-Network/subnet3.png)
 
 #### Tạo internet gateway cho vpc vừa tạo
 
-![igw](/images/5-Workshop/5.3-Network/igw.png)
+![igw](/fcaj-internship-report/images/5-Workshop/5.3-Network/igw.png)
 
 #### Tạo route table
 
 Tạo một route table cho pulbic subnet, có route trỏ đến internet gateway vừa tạo. 
 
-![public route table](/images/5-Workshop/5.3-Network/public-rt.png)
+![public route table](/fcaj-internship-report/images/5-Workshop/5.3-Network/public-rt.png)
 
 Tạo một route table cho private subnet, có route trỏ đến endpoint dùng để truy cập **S3**.
 
-![private route table](/images/5-Workshop/5.3-Network/private-rt.png)
+![private route table](/fcaj-internship-report/images/5-Workshop/5.3-Network/private-rt.png)
 
 
 

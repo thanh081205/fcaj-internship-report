@@ -47,7 +47,7 @@ Tiếp theo vào **Databases** → **Create database**:
 | Backup retention | 7 ngày |
 | Encryption | Enabled |
 
-![tạo rds](/images/5-Workshop/5.4-Data-layer/create-rds.png)
+![tạo rds](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-rds.png)
 
 **Public access: No** là thiết lập quan trọng nhất ở đây. Nếu để Yes, RDS sẽ gán một IP công khai và database trở nên tiếp cận được từ Internet, chỉ còn security group và mật khẩu của bạn đứng ra bảo vệ.
 
@@ -75,7 +75,7 @@ Sau đó tạo hai cụm với engine là **Valkey**:
 | Encryption in transit | Enabled | Enabled |
 | Encryption at rest | Enabled | Enabled |
 
-![tạo elasticache](/images/5-Workshop/5.4-Data-layer/create-valkey.png)
+![tạo elasticache](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-valkey.png)
 
 {{% notice warning %}}
 Nếu bật **encryption in transit**, ứng dụng bắt buộc phải kết nối bằng TLS. Trên thực tế nghĩa là chuỗi kết nối phải dùng `rediss://` thay vì `redis://`, và với `ioredis` hay BullMQ thì client cần thêm `tls: {}` trong phần tùy chọn. Một client cấu hình dạng plaintext sẽ treo ở bước kết nối chứ không trả về lỗi rõ ràng — quá trình bắt tay đơn giản là không bao giờ hoàn tất.
@@ -101,7 +101,7 @@ Console **Amazon MQ** → **Create brokers** → **RabbitMQ**:
 | Subnet | private subnet |
 | Security group | `vsp-rabbitmq-sg` |
 
-![tạo amazon mq](/images/5-Workshop/5.4-Data-layer/create-mq.png)
+![tạo amazon mq](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-mq.png)
 
 **Private access** đặt broker vào bên trong VPC mà không có endpoint công khai nào. Kết hợp với VPC endpoint `mq` đã tạo ở 5.3.3, các ECS task truy cập nó hoàn toàn qua địa chỉ riêng.
 
@@ -158,7 +158,7 @@ Vào tab permission thêm vào Bucket Policy
 }
 ```
 
-![tạo S3](/images/5-Workshop/5.4-Data-layer/create-s3.png)
+![tạo S3](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-s3.png)
 
 #### Amazon EFS
 
@@ -183,9 +183,9 @@ Console **EFS** → **Create file system** → **Customize**:
 
 Port 2049 là NFS. Chỉ task Qdrant cần tới nó.
 
-![tạo efs security group](/images/5-Workshop/5.4-Data-layer/efs-sg.png)
+![tạo efs security group](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/efs-sg.png)
 
-![tạo efs](/images/5-Workshop/5.4-Data-layer/create-efs.png)
+![tạo efs](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-efs.png)
 
 #### Lưu cấu hình vào Parameter Store
 
@@ -193,7 +193,7 @@ Mọi endpoint và thông tin đăng nhập vừa tạo ở trên giờ cần đ
 
 Vào **Systems Manager** → **Parameter Store** → **Create parameter**, làm lần lượt từng dòng:
 
-![tạo parameter store](/images/5-Workshop/5.4-Data-layer/para-store.png)
+![tạo parameter store](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/para-store.png)
 
 Dùng **SecureString** cho mọi thứ chứa mật khẩu hoặc khóa. Tham số SecureString được mã hóa bằng khóa KMS, và đó chính là lý do task execution role của ECS cần quyền `kms:Decrypt`, cũng như lý do VPC endpoint `kms` tồn tại.
 

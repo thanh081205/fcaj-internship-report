@@ -47,7 +47,7 @@ All AWS service APIs are HTTPS, so port 443 is the only one needed. Both task se
 
 For each of the eight interface endpoints: **VPC** console → **Endpoints** → **Create endpoint**.
 
-![create interface endpoint](/images/5-Workshop/5.3-Network/interface-endpoint.png)
+![create interface endpoint](/fcaj-internship-report/images/5-Workshop/5.3-Network/interface-endpoint.png)
 
 | Setting | Value |
 |---|---|
@@ -80,7 +80,7 @@ There is no subnet or security group to choose. Selecting the private route tabl
 
 All nine endpoints should show `available`:
 
-![endpoint list](/images/5-Workshop/5.3-Network/ep-list.png)
+![endpoint list](/fcaj-internship-report/images/5-Workshop/5.3-Network/ep-list.png)
 
 Check that every interface endpoint reports `PrivateDnsEnabled: true`. An endpoint in `available` state with Private DNS disabled will not carry any traffic, and the resulting failure looks like a generic timeout.
 

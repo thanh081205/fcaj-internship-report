@@ -24,7 +24,7 @@ Cách hiển nhiên để GitHub Actions deploy được là tạo một IAM use
 | Provider URL | `https://token.actions.githubusercontent.com` |
 | Audience | `sts.amazonaws.com` |
 
-![oidc provider](/images/5-Workshop/5.7-CICD/provider.png)
+![oidc provider](/fcaj-internship-report/images/5-Workshop/5.7-CICD/provider.png)
 
 Việc này chỉ làm một lần cho mỗi tài khoản AWS. Nếu provider đã tồn tại thì dùng lại.
 
@@ -96,7 +96,7 @@ Trên GitHub: **Settings** → **Secrets and variables** → **Actions** → **V
 
 **Chờ tới khi ổn định.** `wait-for-service-stability: true` kết hợp với circuit breaker đã bật ở mục 5.5 nghĩa là một image hỏng sẽ vừa làm workflow thất bại, vừa khiến service tự động rollback.
 
-![lần chạy workflow](/images/5-Workshop/5.7-CICD/run.png)
+![lần chạy workflow](/fcaj-internship-report/images/5-Workshop/5.7-CICD/run.png)
 
 #### Thử nghiệm
 

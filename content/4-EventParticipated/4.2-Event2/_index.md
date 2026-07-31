@@ -53,11 +53,11 @@ A talk on why infrastructure health metrics alone don't guarantee a good user ex
 
 ### Event Photos
 
-![Audience at the AWS office during the sharing session](/images/4-EventParticipated/4.2-Event2/audience-overview.jpg)
+![Audience at the AWS office during the sharing session](/fcaj-internship-report/images/4-EventParticipated/4.2-Event2/audience-overview.jpg)
 *Full house at the AWS office for the FCAJ tech sharing session*
 
-![Live AWS certification quiz on screen during the session](/images/4-EventParticipated/4.2-Event2/certification-quiz.jpg)
+![Live AWS certification quiz on screen during the session](/fcaj-internship-report/images/4-EventParticipated/4.2-Event2/certification-quiz.jpg)
 *Interactive AWS certification quiz between talks*
 
-![Team scoreboard game at the event](/images/4-EventParticipated/4.2-Event2/team-scoreboard-game.jpg)
+![Team scoreboard game at the event](/fcaj-internship-report/images/4-EventParticipated/4.2-Event2/team-scoreboard-game.jpg)
 *Team scoreboard activity during the session*

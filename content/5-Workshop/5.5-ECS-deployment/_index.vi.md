@@ -30,11 +30,11 @@ Console **ECR** → **Create repository**, làm ba lần:
 
 **Scan on push** chạy quét lỗ hổng cho mọi image bạn đẩy lên, hoàn toàn không tính thêm phí. Không có lý do gì để tắt nó.
 
-![ecr repo](/images/5-Workshop/5.5-ECS-deployment/ecr-repo.png)
+![ecr repo](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/ecr-repo.png)
 
 Các imgae sau khi được build bởi Github Action sẽ được lưu trữ tại đây.
 
-![image trên ecr](/images/5-Workshop/5.5-ECS-deployment/ecr-images.png)
+![image trên ecr](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/ecr-images.png)
 
 Tag `:latest` chấp nhận được cho lần deploy thủ công đầu tiên này. Mục 5.7 sẽ chuyển sang tag theo commit SHA, đó mới là cách làm đúng cho mọi thứ cần lặp lại được — `:latest` khiến bạn không thể biết task đang chạy đến từ bản build nào, và việc rollback trở thành đoán mò.
 
@@ -115,7 +115,7 @@ Ba service cần tìm thấy nhau theo tên. IP của task Fargate thay đổi s
 | Instance discovery | API calls and DNS queries in VPCs |
 | VPC | VPC đã tạo ở 5.3.1 |
 
-![name space](/images/5-Workshop/5.5-ECS-deployment/namespace.png)
+![name space](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/namespace.png)
 
 Thao tác này tạo ra một Route 53 private hosted zone gắn vào VPC. Khi một ECS service đăng ký vào đó, mỗi task nhận một bản ghi `A`, nhờ vậy `api.vsp.internal` phân giải tới đúng IP hiện hành của task từ bất kỳ đâu bên trong VPC. Đây chính là thứ khiến các tham số `GRPC_SEARCH_URL` và `QDRANT_URL` ở mục 5.4 hoạt động được.
 
@@ -137,7 +137,7 @@ Sau đó tạo ba CloudWatch log group — **CloudWatch** → **Log groups** →
 /ecs/vsp-qdrant
 ```
 
-![cluster](/images/5-Workshop/5.5-ECS-deployment/cluster.png)
+![cluster](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/cluster.png)
 
 #### Task definition 1 — Qdrant
 
@@ -706,7 +706,7 @@ Giờ tạo các ECS service, **theo đúng thứ tự này**. Với từng serv
 
 Chờ task chuyển sang `RUNNING` rồi mới làm tiếp.
 
-![qdrant](/images/5-Workshop/5.5-ECS-deployment/qdrant-service.png)
+![qdrant](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/qdrant-service.png)
 
 **2. search-service**
 
@@ -722,7 +722,7 @@ Chờ task chuyển sang `RUNNING` rồi mới làm tiếp.
 | Load balancing | Chưa gắn — sẽ thêm ở 5.6 |
 | Deployment failure detection | Bật rollback khi thất bại |
 
-![search](/images/5-Workshop/5.5-ECS-deployment/search.png)
+![search](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/search.png)
 
 **3. api-service**
 
@@ -738,7 +738,7 @@ Chờ task chuyển sang `RUNNING` rồi mới làm tiếp.
 | Load balancing | Chưa gắn — sẽ thêm ở 5.6 |
 | Deployment failure detection | Bật rollback khi thất bại |
 
-![api](/images/5-Workshop/5.5-ECS-deployment/api.png)
+![api](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/api.png)
 
 Mỗi service ứng dụng được gắn **hai** security group: `vsp-ecs-tasks-sg` dùng chung cho HTTP, cộng thêm group gRPC riêng của nó. Đây chính là lúc việc tách group ở mục 5.3.2 phát huy tác dụng.
 

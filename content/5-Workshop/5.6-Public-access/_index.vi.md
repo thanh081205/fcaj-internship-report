@@ -36,9 +36,9 @@ Target group là nơi ALB chuyển tiếp lưu lượng tới. Tạo hai cái �
 
 Đừng tự tay đăng ký target nào cả. ECS sẽ tự đăng ký và gỡ đăng ký IP của task mỗi khi task sinh ra hay biến mất — đó chính là mục đích của việc gắn service vào target group.
 
-![api target](/images/5-Workshop/5.6-Public-access/api-target.png)
+![api target](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/api-target.png)
 
-![search target](/images/5-Workshop/5.6-Public-access/search-target.png)
+![search target](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/search-target.png)
 
 #### Tạo Application Load Balancer
 
@@ -73,7 +73,7 @@ Default action đang gửi mọi thứ về API. Thêm một rule để lưu lư
 
 Rule được xét theo priority, số nhỏ trước, và default action chỉ chạy khi không rule nào khớp.
 
-![alb](/images/5-Workshop/5.6-Public-access/alb.png)
+![alb](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/alb.png)
 
 #### Gắn ECS service vào target group
 
@@ -87,9 +87,9 @@ Quay lại **ECS** → `vsp-ecs-cluster` → **Services** → `api-service` → 
 | Target group | `vsp-api-tg` |
 | Health check grace period | 120 |
 
-![ser tar api](/images/5-Workshop/5.6-Public-access/ser-tar-api.png)
+![ser tar api](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/ser-tar-api.png)
 
-![ser tar search](/images/5-Workshop/5.6-Public-access/ser-tar-search.png)
+![ser tar search](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/ser-tar-search.png)
 
 Làm tương tự với `search-service`: container `search-service-container` 8000, target group `vsp-search-tg`, và grace period **180** giây.
 
@@ -97,7 +97,7 @@ Làm tương tự với `search-service`: container `search-service-container` 8
 
 Chờ cả hai target group hiển thị `healthy`:
 
-![target khỏe mạnh](/images/5-Workshop/5.6-Public-access/health.png)
+![target khỏe mạnh](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/health.png)
 
 
 #### Tạo Origin Access Control
@@ -112,7 +112,7 @@ Trước khi tạo distribution, hãy tạo danh tính mà CloudFront dùng đ�
 
 Origin Access Control là bản thay thế cho Origin Access Identity cũ, và nó chính là thứ cho phép bucket giữ trạng thái hoàn toàn riêng tư trong khi CloudFront vẫn đọc được.
 
-![origin access s3](/images/5-Workshop/5.6-Public-access/oas3.png)
+![origin access s3](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/oas3.png)
 
 #### Tạo distribution
 
@@ -157,7 +157,7 @@ Origin Access Control là bản thay thế cho Origin Access Identity cũ, và n
 | Security policy | TLSv1.2_2021 |
 | Default root object | để trống |
 
-![behavior của cloudfront](/images/5-Workshop/5.6-Public-access/cloudfront-behaviors.png)
+![behavior của cloudfront](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/cloudfront-behaviors.png)
 
 #### Cập nhật bucket policy cho S3
 
@@ -197,7 +197,7 @@ Dán vào **S3** → bucket của bạn → **Permissions** → **Bucket policy*
 | Route traffic to | Alias to CloudFront distribution |
 | Distribution | distribution của bạn |
 
-![bản ghi alias route53](/images/5-Workshop/5.6-Public-access/record.png)
+![bản ghi alias route53](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/record.png)
 
 #### Kiểm tra toàn bộ đường đi
 
@@ -209,4 +209,4 @@ curl -s https://app.example.com/api/v1/health
 
 Lệnh đầu phải trả về các địa chỉ IP của CloudFront; lệnh thứ hai trả `200 OK` từ API qua ALB; lệnh thứ ba trả về search service, xác nhận listener rule hoạt động.
 
-![ping](/images/5-Workshop/5.6-Public-access/ping.png)
+![ping](/fcaj-internship-report/images/5-Workshop/5.6-Public-access/ping.png)

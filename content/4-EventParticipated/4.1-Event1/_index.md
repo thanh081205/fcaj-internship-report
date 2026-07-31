@@ -82,11 +82,11 @@ Going beyond standard RAG for questions that require multi-hop reasoning:
 
 ### Event Photos
 
-![Slide on Network Intrusion Detection System (NIDS) during the WAF + ML talk](/images/4-EventParticipated/4.1-Event1/nids-talk.jpg)
+![Slide on Network Intrusion Detection System (NIDS) during the WAF + ML talk](/fcaj-internship-report/images/4-EventParticipated/4.1-Event1/nids-talk.jpg)
 *NIDS architecture slide from the "WAF + ML for Cyber Attack Detection" talk*
 
-![Slide comparing UDP/ENet, WebSocket, and HTTP Polling architectures](/images/4-EventParticipated/4.1-Event1/godot-websocket-talk.jpg)
+![Slide comparing UDP/ENet, WebSocket, and HTTP Polling architectures](/fcaj-internship-report/images/4-EventParticipated/4.1-Event1/godot-websocket-talk.jpg)
 *Choosing a multiplayer networking architecture, from the Godot + AWS WebSocket talk*
 
-![Docker talk disclaimer slide with a friendly intro tone](/images/4-EventParticipated/4.1-Event1/docker-talk.jpg)
+![Docker talk disclaimer slide with a friendly intro tone](/fcaj-internship-report/images/4-EventParticipated/4.1-Event1/docker-talk.jpg)
 *Kicking off the Docker containerization talk*

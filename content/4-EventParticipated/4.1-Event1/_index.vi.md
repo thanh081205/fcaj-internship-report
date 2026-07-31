@@ -82,11 +82,11 @@ Vượt qua giới hạn của RAG thông thường với các câu hỏi cần 
 
 ### Hình ảnh sự kiện
 
-![Slide về Network Intrusion Detection System (NIDS) trong bài nói WAF + ML](/images/4-EventParticipated/4.1-Event1/nids-talk.jpg)
+![Slide về Network Intrusion Detection System (NIDS) trong bài nói WAF + ML](/fcaj-internship-report/images/4-EventParticipated/4.1-Event1/nids-talk.jpg)
 *Slide kiến trúc NIDS từ bài nói "WAF + ML for Cyber Attack Detection"*
 
-![Slide so sánh kiến trúc UDP/ENet, WebSocket và HTTP Polling](/images/4-EventParticipated/4.1-Event1/godot-websocket-talk.jpg)
+![Slide so sánh kiến trúc UDP/ENet, WebSocket và HTTP Polling](/fcaj-internship-report/images/4-EventParticipated/4.1-Event1/godot-websocket-talk.jpg)
 *Chọn kiến trúc networking cho multiplayer, từ bài nói Godot + AWS WebSocket*
 
-![Slide disclaimer mở đầu bài nói về Docker với giọng điệu thân thiện](/images/4-EventParticipated/4.1-Event1/docker-talk.jpg)
+![Slide disclaimer mở đầu bài nói về Docker với giọng điệu thân thiện](/fcaj-internship-report/images/4-EventParticipated/4.1-Event1/docker-talk.jpg)
 *Mở đầu bài nói về containerization với Docker*

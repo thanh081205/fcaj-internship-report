@@ -30,11 +30,11 @@ This is the section where the platform actually starts running. Three services g
 
 **Scan on push** runs a vulnerability scan against every image you upload, at no extra cost. There is no reason to leave it off.
 
-![ecr repo](/images/5-Workshop/5.5-ECS-deployment/ecr-repo.png)
+![ecr repo](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/ecr-repo.png)
 
 Images built by GitHub Actions are stored here.
 
-![ecr images](/images/5-Workshop/5.5-ECS-deployment/ecr-images.png)
+![ecr images](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/ecr-images.png)
 
 The `:latest` tag is fine for this first manual deployment. Section 5.7 switches to commit-SHA tags, which is what you want for anything repeatable — `:latest` makes it impossible to tell which build a running task came from, and rollback becomes guesswork.
 
@@ -115,7 +115,7 @@ The three services need to find each other by name. Fargate task IPs change on e
 | Instance discovery | API calls and DNS queries in VPCs |
 | VPC | the VPC from 5.3.1 |
 
-![name space](/images/5-Workshop/5.5-ECS-deployment/namespace.png)
+![name space](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/namespace.png)
 
 This creates a Route 53 private hosted zone attached to the VPC. When an ECS service registers with it, each task gets an `A` record, so `api.vsp.internal` resolves to the current task IP from anywhere inside the VPC. This is what makes the `GRPC_SEARCH_URL` and `QDRANT_URL` parameters from 5.4 work.
 
@@ -137,7 +137,7 @@ Then create three CloudWatch log groups — **CloudWatch** → **Log groups** �
 /ecs/vsp-qdrant
 ```
 
-![cluster](/images/5-Workshop/5.5-ECS-deployment/cluster.png)
+![cluster](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/cluster.png)
 
 #### Task definition 1 — Qdrant
 
@@ -706,7 +706,7 @@ Now create the ECS services, **in this order**. For each: **Clusters** → `vsp-
 
 Wait until the task is `RUNNING` before continuing.
 
-![qdrant](/images/5-Workshop/5.5-ECS-deployment/qdrant-service.png)
+![qdrant](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/qdrant-service.png)
 
 **2. search-service**
 
@@ -722,7 +722,7 @@ Wait until the task is `RUNNING` before continuing.
 | Load balancing | None for now — added in 5.6 |
 | Deployment failure detection | Enable rollback on failure |
 
-![search](/images/5-Workshop/5.5-ECS-deployment/search.png)
+![search](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/search.png)
 
 **3. api-service**
 
@@ -738,7 +738,7 @@ Wait until the task is `RUNNING` before continuing.
 | Load balancing | None for now — added in 5.6 |
 | Deployment failure detection | Enable rollback on failure |
 
-![api](/images/5-Workshop/5.5-ECS-deployment/api.png)
+![api](/fcaj-internship-report/images/5-Workshop/5.5-ECS-deployment/api.png)
 
 Attach **two** security groups to each application service: the shared `vsp-ecs-tasks-sg` for HTTP, plus its own gRPC group. This is where the split from 5.3.2 pays off.
 

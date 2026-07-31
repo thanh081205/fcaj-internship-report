@@ -21,7 +21,7 @@ Mở console **Route 53** → **Hosted zones** → **Create hosted zone**.
 
 Sau khi tạo, zone sẽ có sẵn một bản ghi `NS` liệt kê bốn nameserver của Route 53, cùng một bản ghi `SOA`. Chính bốn nameserver đó là thứ khiến zone này có thẩm quyền với tên miền.
 
-![hosted zone](/images/5-Workshop/5.3-Network/hosted-zone.png)
+![hosted zone](/fcaj-internship-report/images/5-Workshop/5.3-Network/hosted-zone.png)
 
 Nếu bạn đăng ký tên miền **qua Route 53**, việc ủy quyền đã xong sẵn và có thể bỏ qua bước tiếp theo. Nếu bạn đăng ký ở **nhà cung cấp khác**, hãy vào trang quản trị của họ và thay bốn nameserver mặc định bằng bốn nameserver của zone này. Không phần nào còn lại của workshop hoạt động được cho tới khi thay đổi đó có hiệu lực.
 
@@ -55,9 +55,9 @@ Hãy chọn **DNS validation** thay vì xác thực qua email. DNS validation t�
 
 Mỗi chứng chỉ khi tạo ra đều ở trạng thái `Pending validation` kèm một bản ghi `CNAME` mà nó cần nhìn thấy trong DNS của bạn. Vì hosted zone nằm cùng tài khoản, ACM có thể tự ghi bản ghi đó: mở chứng chỉ và chọn **Create records in Route 53**.
 
-![chứng chỉ 1 đã cấp](/images/5-Workshop/5.3-Network/cert1.png)
+![chứng chỉ 1 đã cấp](/fcaj-internship-report/images/5-Workshop/5.3-Network/cert1.png)
 
-![chứng chỉ 2 đã cấp](/images/5-Workshop/5.3-Network/cert2.png)
+![chứng chỉ 2 đã cấp](/fcaj-internship-report/images/5-Workshop/5.3-Network/cert2.png)
 
 #### Thiết kế tầng edge
 
@@ -70,7 +70,7 @@ Tạo clodfront gồm distribution có **hai origin**:
 | ALB origin | tên miền của ALB | Request GraphQL, REST và tìm kiếm |
 | S3 origin | bucket chứa video | File video và các segment DASH |
 
-![cloudfront origins](/images/5-Workshop/5.3-Network/cloudfront-origin.png)
+![cloudfront origins](/fcaj-internship-report/images/5-Workshop/5.3-Network/cloudfront-origin.png)
 
 và **ba behavior**, xét theo thứ tự:
 
@@ -80,7 +80,7 @@ và **ba behavior**, xét theo thứ tự:
 | 1 | `/private/*` | S3 | CachingOptimized | Media có kiểm soát truy cập |
 | 2 | `Default (*)` | ALB | CachingDisabled | Lưu lượng API — tuyệt đối không được cache |
 
-![cloudfront behaviors](/images/5-Workshop/5.3-Network/cloudfront-behaviors.png)
+![cloudfront behaviors](/fcaj-internship-report/images/5-Workshop/5.3-Network/cloudfront-behaviors.png)
 
 Cấu hình đúng behavior mặc định quan trọng hơn vẻ ngoài của nó rất nhiều. Nếu cache policy mặc định có cache lại response, CloudFront sẽ vô tư trả response GraphQL của người dùng này cho người dùng khác, bởi header `Authorization` không nằm trong cache key trừ khi bạn chủ động thêm vào. Hãy đặt `CachingDisabled` cho behavior mặc định và chuyển tiếp toàn bộ header, cookie và query string về origin.
 
@@ -106,4 +106,4 @@ Route 53 còn đảm nhận cả việc phân giải tên *bên trong* VPC. Ở 
 
 Zone đó được tạo tự động khi thiết lập Cloud Map namespace nên ở đây không cần làm gì, nhưng cũng nên biết rằng hai zone tồn tại vì hai mục đích hoàn toàn khác nhau: public zone dẫn người dùng tới tầng edge, còn private zone giúp các container tìm thấy nhau.
 
-![private zone](/images/5-Workshop/5.3-Network/vsp-internal-zone.png)
+![private zone](/fcaj-internship-report/images/5-Workshop/5.3-Network/vsp-internal-zone.png)

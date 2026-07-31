@@ -32,7 +32,7 @@ Tạo chín security group sau trong VPC đã dựng ở bước trước. Nhớ
 
 Cách tạo: console **VPC** → **Security groups** → **Create security group**. Điền tên, mô tả và chọn đúng VPC. Tạm thời để phần inbound rule trống.
 
-![tạo security group](/images/5-Workshop/5.3-Network/create-sg.png)
+![tạo security group](/fcaj-internship-report/images/5-Workshop/5.3-Network/create-sg.png)
 
 {{% notice note %}}
 Hãy tạo đủ cả chín group với rule rỗng trước, rồi mới quay lại thêm rule. Nhiều rule tham chiếu tới group khác, và có hai group tham chiếu lẫn nhau, nên một group phải tồn tại trước thì mới được chọn làm source.
@@ -57,7 +57,7 @@ Sau khi đủ chín group, thêm các inbound rule dưới đây. Mọi thứ kh
 | `vsp-rabbitmq-sg` | 5671 | TCP | `vsp-ecs-tasks-sg` | AMQPS tới Amazon MQ |
 | `vsp-rabbitmq-sg` | 443 | TCP | `vsp-ecs-tasks-sg` | Giao diện quản trị RabbitMQ qua HTTPS |
 
-![danh sách security group](/images/5-Workshop/5.3-Network/sg-list.png)
+![danh sách security group](/fcaj-internship-report/images/5-Workshop/5.3-Network/sg-list.png)
 
 #### Tham chiếu vòng giữa hai group gRPC
 

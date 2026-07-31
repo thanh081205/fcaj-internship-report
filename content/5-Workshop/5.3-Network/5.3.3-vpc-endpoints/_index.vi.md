@@ -47,7 +47,7 @@ Mọi API dịch vụ của AWS đều chạy trên HTTPS, nên chỉ cần mở
 
 Với từng endpoint trong tám interface endpoint: console **VPC** → **Endpoints** → **Create endpoint**.
 
-![tạo interface endpoint](/images/5-Workshop/5.3-Network/interface-endpoint.png)
+![tạo interface endpoint](/fcaj-internship-report/images/5-Workshop/5.3-Network/interface-endpoint.png)
 
 | Mục | Giá trị |
 |---|---|
@@ -80,7 +80,7 @@ Endpoint S3 được cấu hình theo cách khác:
 
 Cả chín endpoint đều phải ở trạng thái `available`:
 
-![danh sách endpoint](/images/5-Workshop/5.3-Network/ep-list.png)
+![danh sách endpoint](/fcaj-internship-report/images/5-Workshop/5.3-Network/ep-list.png)
 
 Kiểm tra để chắc chắn mọi interface endpoint đều báo `PrivateDnsEnabled: true`. Một endpoint ở trạng thái `available` nhưng tắt Private DNS sẽ không mang bất kỳ lưu lượng nào, và lỗi sinh ra trông hệt như một timeout thông thường.
 

@@ -25,7 +25,7 @@ The project delivers practical skills in microservice design, asynchronous messa
 ### 3. Solution Architecture
 Users reach the platform through a custom domain (Route 53) → CloudFront (CDN, TLS) → Application Load Balancer, which routes by path (`/graphql/*` to `api_service`, `/api/*` to `search_service`) → an ECS Fargate cluster running three services: `api-service`, `search-service`, and `qdrant` (a self-hosted vector database persisting data on EFS). The two application services communicate over bidirectional gRPC and both connect to RDS PostgreSQL (relational metadata), ElastiCache Valkey (sessions, BullMQ queues, caching), and Amazon MQ (asynchronous metadata synchronization). Raw and transcoded video files are stored in S3 and served through CloudFront. All compute runs in private subnets and reaches AWS services through VPC Endpoints rather than a NAT Gateway, for cost efficiency.
 
-![VideoPlatformServer Solution Architecture](/images/2-Proposal/solution_architecture.jpg)
+![VideoPlatformServer Solution Architecture](/fcaj-internship-report/images/2-Proposal/solution_architecture.jpg)
 
 ### AWS Services Used
 - **Amazon ECS (Fargate/Fargate Spot)**: Runs containers for `api-service`, `search-service`, and `qdrant`.

@@ -24,7 +24,7 @@ The obvious way to let GitHub Actions deploy is to create an IAM user, generate 
 | Provider URL | `https://token.actions.githubusercontent.com` |
 | Audience | `sts.amazonaws.com` |
 
-![oidc provider](/images/5-Workshop/5.7-CICD/provider.png)
+![oidc provider](/fcaj-internship-report/images/5-Workshop/5.7-CICD/provider.png)
 
 This is created once per AWS account. If it already exists, reuse it.
 
@@ -96,7 +96,7 @@ These are **variables**, not secrets — none of them is confidential, and varia
 
 **Wait for stability.** `wait-for-service-stability: true` combined with the deployment circuit breaker from 5.5 means a broken image fails the workflow *and* rolls the service back automatically.
 
-![workflow run](/images/5-Workshop/5.7-CICD/run.png)
+![workflow run](/fcaj-internship-report/images/5-Workshop/5.7-CICD/run.png)
 
 #### Test it
 

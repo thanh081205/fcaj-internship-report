@@ -21,7 +21,7 @@ Open the **Route 53** console → **Hosted zones** → **Create hosted zone**.
 
 Once created, the zone contains an `NS` record listing four Route 53 nameservers, and an `SOA` record. Those four nameservers are what makes the zone authoritative.
 
-![hosted zone](/images/5-Workshop/5.3-Network/hosted-zone.png)
+![hosted zone](/fcaj-internship-report/images/5-Workshop/5.3-Network/hosted-zone.png)
 
 If you registered the domain **through Route 53**, delegation is already done and you can skip the next step. If you registered it **elsewhere**, go to your registrar's control panel and replace its default nameservers with the four from this zone. Nothing else in this workshop will work until that change takes effect.
 
@@ -55,9 +55,9 @@ Choose **DNS validation** rather than email validation. DNS validation renews au
 
 Each certificate opens in `Pending validation` with a `CNAME` record it needs to see in your DNS. Because the hosted zone is in the same account, ACM can write that record for you: open the certificate and choose **Create records in Route 53**.
 
-![certificate 1 issued](/images/5-Workshop/5.3-Network/cert1.png)
+![certificate 1 issued](/fcaj-internship-report/images/5-Workshop/5.3-Network/cert1.png)
 
-![certificate 2 issued](/images/5-Workshop/5.3-Network/cert2.png)
+![certificate 2 issued](/fcaj-internship-report/images/5-Workshop/5.3-Network/cert2.png)
 
 #### How the edge is designed
 
@@ -70,7 +70,7 @@ The distribution has **two origins**:
 | ALB origin | the ALB's DNS name | GraphQL, REST, and search requests |
 | S3 origin | the video bucket | Video files and DASH segments |
 
-![cloudfront origins](/images/5-Workshop/5.3-Network/cloudfront-origin.png)
+![cloudfront origins](/fcaj-internship-report/images/5-Workshop/5.3-Network/cloudfront-origin.png)
 
 and **three behaviors**, evaluated in order:
 
@@ -80,7 +80,7 @@ and **three behaviors**, evaluated in order:
 | 1 | `/private/*` | S3 | CachingOptimized | Access-controlled media |
 | 2 | `Default (*)` | ALB | CachingDisabled | API traffic — must never be cached |
 
-![cloudfront behaviors](/images/5-Workshop/5.3-Network/cloudfront-behaviors.png)
+![cloudfront behaviors](/fcaj-internship-report/images/5-Workshop/5.3-Network/cloudfront-behaviors.png)
 
 Getting the default behavior right matters more than it looks. If the default cache policy caches responses, CloudFront will happily serve one user's GraphQL response to another user, because the `Authorization` header is not part of the cache key unless you explicitly add it. Use `CachingDisabled` on the default behavior and forward all headers, cookies, and query strings to the origin.
 
@@ -106,4 +106,4 @@ Route 53 also handles name resolution *inside* the VPC. In section 5.5 the ECS s
 
 That zone is created automatically when the Cloud Map namespace is set up, so there is nothing to do here — but it is worth knowing that the two zones exist for entirely different purposes: the public zone routes users to the edge, the private zone lets containers find each other.
 
-![private zone](/images/5-Workshop/5.3-Network/vsp-internal-zone.png)
+![private zone](/fcaj-internship-report/images/5-Workshop/5.3-Network/vsp-internal-zone.png)

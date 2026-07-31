@@ -32,7 +32,7 @@ Sở dĩ có hai public subnet là vì Application Load Balancer bắt buộc ph
 Toàn bộ phần còn lại được đặt trong một private subnet duy nhất ở `ap-southeast-1a`. Đây là lựa chọn đơn giản hóa có chủ đích nhằm giữ chi phí workshop ở mức chấp nhận được: thêm một AZ nữa đồng nghĩa với một bộ VPC Endpoint thứ hai và database Multi-AZ, làm chi phí theo giờ tăng gần gấp đôi. Đổi lại, nếu AZ đó gặp sự cố thì toàn hệ thống ngừng hoạt động. Một hệ thống production thật sự nên trải trên cả hai AZ.
 {{% /notice %}}
 
-![sơ đồ mạng](/images/5-Workshop/5.3-Network/network-diagram.png)
+![sơ đồ mạng](/fcaj-internship-report/images/5-Workshop/5.3-Network/network-diagram.png)
 
 #### Các luồng lưu lượng
 

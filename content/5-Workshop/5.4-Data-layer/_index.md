@@ -47,7 +47,7 @@ Now **Databases** → **Create database**:
 | Backup retention | 7 days |
 | Encryption | Enabled |
 
-![create rds](/images/5-Workshop/5.4-Data-layer/create-rds.png)
+![create rds](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-rds.png)
 
 **Public access: No** is the setting that matters most. Set to Yes, RDS assigns a public IP and the database becomes reachable from the Internet, protected by nothing but the security group and your password.
 
@@ -75,7 +75,7 @@ Then create two clusters with **Valkey** as the engine:
 | Encryption in transit | Enabled | Enabled |
 | Encryption at rest | Enabled | Enabled |
 
-![create elasticache](/images/5-Workshop/5.4-Data-layer/create-valkey.png)
+![create elasticache](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-valkey.png)
 
 {{% notice warning %}}
 If you enable **encryption in transit**, the application must connect with TLS. In practice that means the connection string uses `rediss://` rather than `redis://`, and for `ioredis` or BullMQ the client needs `tls: {}` in its options. A client configured for plaintext will hang on connect rather than returning a clear error — the handshake simply never completes.
@@ -101,7 +101,7 @@ RabbitMQ carries the metadata sync between the two services: when a video finish
 | Subnet | private subnet |
 | Security group | `vsp-rabbitmq-sg` |
 
-![create amazon mq](/images/5-Workshop/5.4-Data-layer/create-mq.png)
+![create amazon mq](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-mq.png)
 
 **Private access** puts the broker inside the VPC with no public endpoint. Combined with the `mq` VPC endpoint from 5.3.3, the ECS tasks reach it entirely over private addressing.
 
@@ -158,7 +158,7 @@ Open the Permissions tab and add the bucket policy:
 }
 ```
 
-![create S3](/images/5-Workshop/5.4-Data-layer/create-s3.png)
+![create S3](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-s3.png)
 
 #### Amazon EFS
 
@@ -183,9 +183,9 @@ On the network step, remove the default mount targets and keep **only** the one 
 
 Port 2049 is NFS. Only the Qdrant task needs it.
 
-![create efs security group](/images/5-Workshop/5.4-Data-layer/efs-sg.png)
+![create efs security group](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/efs-sg.png)
 
-![create efs](/images/5-Workshop/5.4-Data-layer/create-efs.png)
+![create efs](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/create-efs.png)
 
 #### Store the configuration in Parameter Store
 
@@ -193,7 +193,7 @@ Every endpoint and credential created above now needs to reach the containers. R
 
 **Systems Manager** → **Parameter Store** → **Create parameter**, once per row:
 
-![create parameter store](/images/5-Workshop/5.4-Data-layer/para-store.png)
+![create parameter store](/fcaj-internship-report/images/5-Workshop/5.4-Data-layer/para-store.png)
 
 Use **SecureString** for anything containing a password or key. SecureString parameters are encrypted with a KMS key, which is why the ECS task execution role needs `kms:Decrypt` and why the `kms` VPC endpoint exists.
 

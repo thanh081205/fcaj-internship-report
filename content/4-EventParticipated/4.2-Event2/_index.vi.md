@@ -53,11 +53,11 @@ Bài nói lý giải vì sao chỉ số hạ tầng "khỏe mạnh" không đồ
 
 ### Hình ảnh sự kiện
 
-![Khán giả tại văn phòng AWS trong buổi chia sẻ](/images/4-EventParticipated/4.2-Event2/audience-overview.jpg)
+![Khán giả tại văn phòng AWS trong buổi chia sẻ](/fcaj-internship-report/images/4-EventParticipated/4.2-Event2/audience-overview.jpg)
 *Khán phòng kín chỗ tại văn phòng AWS cho buổi tech sharing của FCAJ*
 
-![Trò chơi trắc nghiệm chứng chỉ AWS trực tiếp trên màn hình](/images/4-EventParticipated/4.2-Event2/certification-quiz.jpg)
+![Trò chơi trắc nghiệm chứng chỉ AWS trực tiếp trên màn hình](/fcaj-internship-report/images/4-EventParticipated/4.2-Event2/certification-quiz.jpg)
 *Mini game trắc nghiệm chứng chỉ AWS xen giữa các phần trình bày*
 
-![Trò chơi bảng điểm đội tại sự kiện](/images/4-EventParticipated/4.2-Event2/team-scoreboard-game.jpg)
+![Trò chơi bảng điểm đội tại sự kiện](/fcaj-internship-report/images/4-EventParticipated/4.2-Event2/team-scoreboard-game.jpg)
 *Hoạt động thi đua theo đội trong buổi chia sẻ*

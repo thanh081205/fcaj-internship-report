@@ -32,7 +32,7 @@ Create these nine security groups in the VPC from the previous step. Give each o
 
 To create one: **VPC** console → **Security groups** → **Create security group**. Set the name, a description, and the VPC. Leave the inbound rules empty for now.
 
-![create security group](/images/5-Workshop/5.3-Network/create-sg.png)
+![create security group](/fcaj-internship-report/images/5-Workshop/5.3-Network/create-sg.png)
 
 {{% notice note %}}
 Create all nine groups first with no rules, then go back and add the rules. Several rules reference other groups, and two of them reference each other, so a group has to exist before it can be named as a source.
@@ -57,7 +57,7 @@ Once all nine exist, add the inbound rules below. Everything not listed here sta
 | `vsp-rabbitmq-sg` | 5671 | TCP | `vsp-ecs-tasks-sg` | AMQPS to Amazon MQ |
 | `vsp-rabbitmq-sg` | 443 | TCP | `vsp-ecs-tasks-sg` | RabbitMQ management console over HTTPS |
 
-![security group list](/images/5-Workshop/5.3-Network/sg-list.png)
+![security group list](/fcaj-internship-report/images/5-Workshop/5.3-Network/sg-list.png)
 
 #### The circular reference between the gRPC groups
 

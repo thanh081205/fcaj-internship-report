@@ -12,7 +12,7 @@ In this step we create the VPC, three subnets, an Internet Gateway, and the two 
 
 Open the **VPC** console and choose **Create VPC**.
 
-![create vpc](/images/5-Workshop/5.3-Network/create-vpc.png)
+![create vpc](/fcaj-internship-report/images/5-Workshop/5.3-Network/create-vpc.png)
 
 Set the following:
 
@@ -30,22 +30,22 @@ Choose **Create VPC** and wait for it to finish.
 
 Now create the subnets: two public subnets, `10.0.1.0/24` and `10.0.2.0/24`, and one private subnet, `10.0.10.0/24`.
 
-![subnet 1](/images/5-Workshop/5.3-Network/subnet1.png)
+![subnet 1](/fcaj-internship-report/images/5-Workshop/5.3-Network/subnet1.png)
 
-![subnet 2](/images/5-Workshop/5.3-Network/subnet2.png)
+![subnet 2](/fcaj-internship-report/images/5-Workshop/5.3-Network/subnet2.png)
 
-![subnet 3](/images/5-Workshop/5.3-Network/subnet3.png)
+![subnet 3](/fcaj-internship-report/images/5-Workshop/5.3-Network/subnet3.png)
 
 #### Create an Internet Gateway for the VPC
 
-![igw](/images/5-Workshop/5.3-Network/igw.png)
+![igw](/fcaj-internship-report/images/5-Workshop/5.3-Network/igw.png)
 
 #### Create the route tables
 
 Create a route table for the public subnets, with a route pointing at the Internet Gateway you just created.
 
-![public route table](/images/5-Workshop/5.3-Network/public-rt.png)
+![public route table](/fcaj-internship-report/images/5-Workshop/5.3-Network/public-rt.png)
 
 Create a route table for the private subnet, with a route pointing at the endpoint used to reach **S3**.
 
-![private route table](/images/5-Workshop/5.3-Network/private-rt.png)
+![private route table](/fcaj-internship-report/images/5-Workshop/5.3-Network/private-rt.png)
