@@ -18,8 +18,8 @@ A key design decision throughout this workshop is that **all compute runs in pri
 
 #### What you will build
 
-+ A **VPC** with public and private subnets, security groups, and VPC Endpoints for ECR, CloudWatch Logs, Systems Manager, and Amazon MQ.
-+ A managed data layer: **Amazon RDS for PostgreSQL**, **Amazon ElastiCache for Valkey**, **Amazon MQ (RabbitMQ)**, and **Amazon EFS**.
++ A **VPC** with public and private subnets, security groups, and VPC Endpoints, CloudWatch Logs, Systems Manager, Amazon MQ.
++ A managed data layer: **Amazon RDS for PostgreSQL**, **Amazon ElastiCache for Valkey**, **Amazon S3**, and **Amazon EFS**.
 + Three services on **Amazon ECS Fargate**: `api-service`, `search-service`, and a self-hosted **Qdrant** vector database backed by EFS.
 + Public access through an **Application Load Balancer** and **Amazon CloudFront**, secured with a custom domain (Route 53) and TLS certificates (AWS Certificate Manager).
 + An automated **CI/CD pipeline** using GitHub Actions with an IAM OIDC federated role, so no static AWS access keys are stored anywhere.
