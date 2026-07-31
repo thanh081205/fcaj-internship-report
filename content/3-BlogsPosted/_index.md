@@ -14,5 +14,5 @@ This blog compares four common AWS deployment strategies — Big Bang, Rolling, 
 ###  [Blog 2 - ZERO-SECRET DEPLOYMENT WITH SECRETS MANAGER + IAM ROLE + IMDSV2](3.2-Blog2/)
 A field-report style blog on a real incident: a corrupted Firebase private key caused by improper newline escaping in `jq`, and the resulting refactor to a zero-secret deployment pipeline using AWS Secrets Manager, IAM Role, and IMDSv2 — including a revisit of the 2019 Capital One breach and how IMDSv2 mitigates that exact attack path.
 
-###  [Blog 3 - ...](3.3-Blog3/)
-This blog introduces the newly added session policies feature in Amazon EKS Pod Identity, which allows you to narrow IAM permissions flexibly and precisely for each pod without needing to create multiple separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+###  [Blog 3 - AMAZON BEDROCK MANAGED KNOWLEDGE BASE — "MANAGED" RAG FOR ENTERPRISE, NO NEED TO BUILD YOUR OWN PIPELINE](3.3-Blog3/)
+A summary of AWS's newly announced Amazon Bedrock Managed Knowledge Base: native data connectors, Smart Parsing, and an Agentic Retriever that together turn the RAG pipeline (connectors, parsing, embedding, retrieval, re-ranking) into a single managed primitive, plus its integration with AgentCore Gateway and decoupling from any specific model.

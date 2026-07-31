@@ -14,5 +14,5 @@ Blog này so sánh 4 chiến thuật deploy phổ biến trên AWS — Big Bang,
 ###  [Blog 2 - ZERO-SECRET DEPLOYMENT VỚI SECRETS MANAGER + IAM ROLE + IMDSV2](3.2-Blog2/)
 Bài viết dạng field-report về một sự cố thật: private key Firebase bị corrupt do `jq` escape newline sai cách, và quá trình refactor sang pipeline "zero-secret deployment" dùng AWS Secrets Manager, IAM Role và IMDSv2 — kèm nhắc lại vụ rò rỉ dữ liệu Capital One 2019 và cách IMDSv2 chặn đúng đường tấn công đó.
 
-###  [Blog 3 - ...](3.3-Blog3/)
-Blog này giới thiệu Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+###  [Blog 3 - AMAZON BEDROCK MANAGED KNOWLEDGE BASE — RAG "MANAGED" CHO ENTERPRISE, KHÔNG CẦN TỰ DỰNG PIPELINE](3.3-Blog3/)
+Tóm tắt tính năng Amazon Bedrock Managed Knowledge Base vừa được AWS công bố: native data connectors, Smart Parsing và Agentic Retriever giúp biến cả pipeline RAG (connector, parsing, embedding, retrieval, re-ranking) thành một primitive được quản lý sẵn, cùng khả năng tích hợp với AgentCore Gateway và không bị khóa vào một model cố định.
